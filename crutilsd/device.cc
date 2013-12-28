@@ -11,13 +11,21 @@
 #include <unistd.h>
 
 
+/* constructor
+ *
+ * init class
+ */
+crutilsd_device::crutilsd_device () {
+	this->dbus_connection = NULL;
+}
+
+
 /* open_device(const char *p_device)
  *
- * versucht die uebergebene Geraetedatei zu oeffnen und die exklusivrechte zu
- * erhalten. Bei Erfolg wird true zurueck gegeben, in allen anderen Faellen
- * false.
+ * try to open the given file and get exclusive rights for it. Return true if
+ * both was sucessfull, otherwise false.
  */
-bool crutilsd_device::open_device(const char *p_device) {
+bool crutilsd_device::open_device (const char *p_device) {
 	/* Try to open this Device */
 	this->file = open(p_device, O_RDONLY);
 	if (this->file >= 0) {
@@ -35,10 +43,19 @@ bool crutilsd_device::open_device(const char *p_device) {
 }
 
 
+/* set_dbus ()
+ *
+ * saves a pointer to the dbus object in internal memory
+ */
+void crutilsd_device::set_dbus (crutilsd_dbus *p_dbus) {
+	this->dbus_connection = p_dbus;
+}
+
+
 /* listen ()
  *
- * wartet auf eingehende codes, speichert diese im buffer zwischen und sendet
- * jeweils einen code an die zur verfuegung stehende Funktion
+ * wait for incomming codes, save them in buffer until code finishes and send
+ * whole code to dbus.
  */
 void crutilsd_device::listen () {
 	/* start with read out the data. The chars are cached in the buffer and will be
@@ -85,6 +102,7 @@ void crutilsd_device::listen () {
 		 * function */
 		if (c == 0) {
 			syslog(LOG_DEBUG, "recived code '%s'", &buffer[0]);
+			this->dbus_connection->send_code(&buffer[0]);
 
 			buffer.clear();
 		}
@@ -95,4 +113,3 @@ void crutilsd_device::listen () {
 
 	syslog(LOG_INFO, "stoped listening");
 }
-

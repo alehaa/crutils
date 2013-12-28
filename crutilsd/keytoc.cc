@@ -5,6 +5,7 @@
 
 #include <linux/input.h>
 
+
 const char crutilsd_device::keytoc(struct input_event *p_ev) {
 	/* is this an enter signal? */
 	if (p_ev->code == KEY_ENTER) return 0;
@@ -25,4 +26,3 @@ const char crutilsd_device::keytoc(struct input_event *p_ev) {
 
 	return -1;
 }
-

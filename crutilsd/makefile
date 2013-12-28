@@ -8,10 +8,6 @@ LDFLAGS := -Wl,--as-needed
 LDLIBS  := $(PKG_LDFLAGS)
 
 
-#crutilsd.o: crutilsd.cc
-#	$(CXX) -o $@ -c -Wall -g $+
-
-
 %.o: %.cc
 	$(CXX) -o $@ -c $(CFLAGS) $+
 
@@ -28,4 +24,3 @@ all: crutilsd
 clean:
 	rm -f *.o
 	rm -f crutilsd
-

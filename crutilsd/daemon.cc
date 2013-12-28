@@ -22,10 +22,8 @@ bool drop_privilegs () {
 		struct passwd *usr = getpwnam("crutils");
 		if (usr != NULL) {
 			if (setuid(usr->pw_uid) == 0) {
-				if (setgid(usr->pw_gid) == 0) {
-					syslog(LOG_DEBUG, "root-privileges discarded");
-					return true;
-				}
+				syslog(LOG_DEBUG, "root-privileges discarded");
+				return true;
 			}
 		} else syslog(LOG_ERR, "user 'crutils' does not exists");
 
@@ -86,4 +84,3 @@ bool daemonize () {
 		}
 	}
 }
-

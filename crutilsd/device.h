@@ -8,17 +8,22 @@
 #ifndef CRUTILSD_DEVICE_H
 #define CRUTILSD_DEVICE_H
 
+#include "dbus.h"
+
 class crutilsd_device {
 	public:
-		bool open_device(const char *p_device);
+		crutilsd_device();
+
+		bool open_device (const char *p_device);
 		void listen ();
+		void set_dbus (crutilsd_dbus *p_dbus);
 
 	protected:
-		const char keytoc(struct input_event *p_ev);
+		const char keytoc (struct input_event *p_ev);
 
 	private:
 		int file;
+		crutilsd_dbus *dbus_connection;
 };
 
 #endif
-

@@ -1,9 +1,10 @@
 /*
  * include header-files
  */
+#include "dbus.h"
+
 #include <syslog.h>
 
-#include "dbus.h"
 
 /* constructor ()
  * init this class
@@ -52,4 +53,3 @@ void crutilsd_dbus::send_code (const char *p_code) {
 	dbus_connection_flush(this->dbus_connection);
 	dbus_message_unref(message);
 }
-
