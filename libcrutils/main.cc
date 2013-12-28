@@ -2,6 +2,8 @@
  * include header-files
  */
 
-int main() {
+#include "crutils.h"
 
+int main() {
+	crutils cr_handle;
 }

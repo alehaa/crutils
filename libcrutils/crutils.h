@@ -8,15 +8,21 @@
 #ifndef CRUTILS
 #define CRUTILS
 
+#include <dbus/dbus.h>
+
 class crutils {
 	public:
 		crutils();
 		~crutils();
 
+		bool connect();
+		void disconnect();
+
 	protected:
+		DBusConnection *dbus_connection;
 
 	private:
-		DBusConnection *dbus_connection;
-}
+
+};
 
 #endif
