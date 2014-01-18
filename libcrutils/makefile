@@ -3,7 +3,7 @@ PKG := dbus-glib-1
 PKG_CFLAGS  := $(shell pkg-config --cflags $(PKG))
 PKG_LDFLAGS := $(shell pkg-config --libs $(PKG))
 
-CFLAGS  := -Wall $(PKG_CFLAGS) $(CFLAGS)
+CFLAGS  := -Wall $(PKG_CFLAGS) $(CFLAGS) -g
 LDFLAGS := -Wl,--as-needed
 LDLIBS  := $(PKG_LDFLAGS)
 
@@ -12,7 +12,7 @@ LDLIBS  := $(PKG_LDFLAGS)
 	$(CXX) -o $@ -c $(CFLAGS) $+
 
 
-test: main.o crutils.o
+test: main.o crutils.o crutils_thread.o
 	$(CXX) -o $@ $+ $(LDFLAGS) $(LDLIBS)
 
 

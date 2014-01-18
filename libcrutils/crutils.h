@@ -9,20 +9,27 @@
 #define CRUTILS
 
 #include <dbus/dbus.h>
+#include <pthread.h>
 
 class crutils {
 	public:
-		crutils();
-		~crutils();
+		crutils ();
+		~crutils ();
 
-		bool connect();
-		void disconnect();
+
+		bool connect ();
+		bool listen ();
+		void set_handler (void (*p_handler) (const char * p_code));
 
 	protected:
 		DBusConnection *dbus_connection;
 
 	private:
+		pthread_t thread;
+		static void *listener (void *p_args);
+		static DBusHandlerResult parse_dbus_signal (DBusConnection *p_connection, DBusMessage *p_message, void *p_user_data);
 
+		void (*code_handler) (const char* p_code);
 };
 
 #endif

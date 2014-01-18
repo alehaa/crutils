@@ -12,6 +12,7 @@
  */
 crutils::crutils () {
 	this->dbus_connection = NULL;
+	this->code_handler = NULL;
 }
 
 
@@ -20,7 +21,7 @@ crutils::crutils () {
  * close all open connections
  */
 crutils::~crutils () {
-	this->disconnect();
+//	this->disconnect();
 }
 
 
@@ -30,25 +31,26 @@ crutils::~crutils () {
  */
 bool crutils::connect () {
 	DBusError dbus_error;
+	dbus_error_init(&dbus_error);
 	this->dbus_connection = dbus_bus_get(DBUS_BUS_SYSTEM, &dbus_error);
-	if (this->dbus_connection) return true;
+	if (this->dbus_connection) {
+		/* we only want to recive signals by 'system.codereader' with member 'read' */
+		dbus_bus_add_match(this->dbus_connection, "type='signal',interface='system.codereader',member='read'", &dbus_error);
+		if (!dbus_error_is_set(&dbus_error)) {
+			return true;
+		}
+	}
 
 	/* an error occured */
-	fprintf(stderr, "Failed to connect to D-BUS daemon: %s\n", dbus_error.message);
 	dbus_error_free(&dbus_error);
-
 	return false;
 }
 
 
-/* disconnect ()
+/* set_handler ()
  *
- * disconnect the current session, if one is open
+ * sets handler function, which uses the found codes
  */
-void crutils::disconnect () {
-	/* a connection could only be closed if one is open. */
-	if (this->dbus_connection) {
-		/* try to close connection */
-		dbus_connection_close(this->dbus_connection);
-	}
+void crutils::set_handler (void (*p_handler) (const char * p_code)) {
+	this->code_handler = p_handler;
 }
