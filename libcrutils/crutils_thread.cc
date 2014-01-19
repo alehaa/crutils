@@ -26,6 +26,5 @@ bool crutils::listen () {
  * stops listening thread. for short time disconnects please use mute!
  */
 bool crutils::stop () {
-	if (pthread_kill(this->thread, 9) == 0) return true;
-	else return false;
+	return (pthread_kill(this->thread, 9) == 0);
 }
