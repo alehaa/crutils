@@ -14,11 +14,9 @@ void print_code(const char *p_code) {
 
 int main() {
 	crutils cr_handle;
-	if(cr_handle.connect()) {
-		printf("connected\n");
-		cr_handle.set_handler(&print_code);
-		cr_handle.listen();
-	}
+	cr_handle.set_handler(&print_code);
+	cr_handle.listen();
 
 	sleep(100);
+	cr_handle.stop();
 }

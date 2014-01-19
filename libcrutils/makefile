@@ -12,7 +12,7 @@ LDLIBS  := $(PKG_LDFLAGS)
 	$(CXX) -o $@ -c $(CFLAGS) $+
 
 
-test: main.o crutils.o crutils_thread.o
+test: main.o crutils.o crutils_thread.o crutils_dbus.o
 	$(CXX) -o $@ $+ $(LDFLAGS) $(LDLIBS)
 
 

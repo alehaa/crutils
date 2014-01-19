@@ -16,13 +16,19 @@ class crutils {
 		crutils ();
 		~crutils ();
 
-
-		bool connect ();
-		bool listen ();
 		void set_handler (void (*p_handler) (const char * p_code));
 
+		bool listen ();
+		bool stop();
+
+		void mute();
+		void unmute();
+
 	protected:
+		bool connect ();
+
 		DBusConnection *dbus_connection;
+		bool muted;
 
 	private:
 		pthread_t thread;

@@ -3,8 +3,6 @@
  */
 #include "crutils.h"
 
-#include <cstdio>
-
 
 /* constructor ()
  *
@@ -13,6 +11,8 @@
 crutils::crutils () {
 	this->dbus_connection = NULL;
 	this->code_handler = NULL;
+
+	this->muted = false;
 }
 
 
@@ -21,29 +21,7 @@ crutils::crutils () {
  * close all open connections
  */
 crutils::~crutils () {
-//	this->disconnect();
-}
-
-
-/* connect ()
- *
- * try to connect to DBUS-Daemon and return result
- */
-bool crutils::connect () {
-	DBusError dbus_error;
-	dbus_error_init(&dbus_error);
-	this->dbus_connection = dbus_bus_get(DBUS_BUS_SYSTEM, &dbus_error);
-	if (this->dbus_connection) {
-		/* we only want to recive signals by 'system.codereader' with member 'read' */
-		dbus_bus_add_match(this->dbus_connection, "type='signal',interface='system.codereader',member='read'", &dbus_error);
-		if (!dbus_error_is_set(&dbus_error)) {
-			return true;
-		}
-	}
-
-	/* an error occured */
-	dbus_error_free(&dbus_error);
-	return false;
+	this->stop();
 }
 
 
@@ -53,4 +31,22 @@ bool crutils::connect () {
  */
 void crutils::set_handler (void (*p_handler) (const char * p_code)) {
 	this->code_handler = p_handler;
+}
+
+
+/* mute ()
+ *
+ * listen to incomming codes, but don't send them to code_handler
+ */
+void crutils::mute () {
+	this->muted = true;
+}
+
+
+/* unmute ()
+ *
+ * re-enables listening after being muted
+ */
+void crutils::unmute () {
+	this->muted = false;
 }
