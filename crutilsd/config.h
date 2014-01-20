@@ -22,15 +22,20 @@
 
 class crutilsd_config {
 	public:
-		crutilsd_config(int argc, char ** argv);
+		crutilsd_config (int argc, char **argv);
 
-		bool is_verbose();
+		bool get_conf_verbose ();
+		char * get_conf_device ();
 
 	protected:
+		void print_usage ();
 
 	private:
 		bool conf_verbose;
 		char *conf_device;
+
+		void get_conf_by_argv (int argc, char **argv);
+		void get_conf_by_env ();
 };
 
 #endif

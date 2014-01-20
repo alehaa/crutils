@@ -34,8 +34,38 @@
  * init class and get config from comand line options or env vars
  */
 crutilsd_config::crutilsd_config (int argc, char **argv) {
+	/*
+	 * init class variables
+	 */
+	this->conf_verbose = false;
+	this->conf_device = NULL;
+
+
+	/* get config by comand line options and env vars */
+	this->get_conf_by_argv(argc, argv);
+	this->get_conf_by_env();
+}
+
+
+/* print_usage
+ *
+ * print a list of all avivable config params to stdout
+ */
+void crutilsd_config::print_usage () {
+	printf("usage: crutilsd (options) (device_file)\n\nlist of all options:\n");
+	printf("-v, --verbose\t\tprint all messages to stdout\n");
+	printf("    --device [file]\tdevicefile for codereader\n\t\t\tCould also be set as environment variable DEVNAME or as last comand line argument \n");
+}
+
+
+/* get_conf_by_argv
+ *
+ * get config by comandline arguments
+ */
+void crutilsd_config::get_conf_by_argv (int argc, char **argv) {
 	static struct option long_options[] = {
-		{"verbose", no_argument, NULL, 'v'}
+		{"verbose", no_argument, NULL, 'v'},
+		{"device", required_argument, NULL, 0}
 	};
 
 
@@ -44,12 +74,13 @@ crutilsd_config::crutilsd_config (int argc, char **argv) {
 	char c;
 	while ((c = getopt_long(argc, argv, "v", long_options, &option_index)) != -1) {
 		switch (c) {
-			/* currently there are no long arguments set, which are NOT mapped to short
-			 * flags
-			 * case 0:
-			 * 	printf("%i\n", option_index);
-			 * 	break;
-			 */
+			case 0:
+				switch (option_index) {
+					case 1:
+						this->conf_device = optarg;
+						break;
+				}
+				break;
 
 			case 'v':
 				this->conf_verbose = true;
@@ -57,8 +88,38 @@ crutilsd_config::crutilsd_config (int argc, char **argv) {
 
 			default:
 				/* an error occured. print error and exit */
-				fprintf(stderr, "usage: %s (options) device_file\n\nlist of all options:\n-v, --verbose\tprint all messages to stdout\n", argv[0]);
+				this->print_usage();
 				exit(EXIT_FAILURE);
 		}
 	}
+}
+
+
+/* get_conf_by_env
+ *
+ * get config by env vars if not already set by argv
+ */
+void crutilsd_config::get_conf_by_env () {
+	if (!this->conf_device) {
+		char* device = getenv("DEVNAME");
+		if (device) this->conf_device = device;
+	}
+}
+
+
+/* get_conf_verbose
+ *
+ * return this->conf_verbose;
+ */
+bool crutilsd_config::get_conf_verbose () {
+	return this->conf_verbose;
+}
+
+
+/* get_conf_device
+ *
+ * return this->conf_device;
+ */
+char * crutilsd_config::get_conf_device () {
+	return this->conf_device;
 }

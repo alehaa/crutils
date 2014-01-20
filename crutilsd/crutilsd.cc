@@ -21,15 +21,19 @@
  * include header-files
  */
 #include <cstdlib>
+#include <cstdio>
 
 #include <syslog.h>
 
 #include "dbus.h"
 #include "device.h"
 #include "daemon.h"
+#include "config.h"
 
+int main (int argc, char **argv) {
+	/* init config */
+	crutilsd_config conf(argc, argv);
 
-int main () {
 	/* open syslog. We want to log to daemon and a PID is needed for each log entry,
 	 * because there may be multiple instances of this daemon. */
 	openlog("crutilsd", LOG_PID, LOG_DAEMON);
@@ -42,8 +46,8 @@ int main () {
 
 	/* we could only do anything, if a device is given. Get path to device file by
 	 * environment variable 'DEVNAME' */
-	char* device = getenv("DEVNAME");
-	if (device == NULL) {
+	char* device = conf.get_conf_device();
+	if (!device) {
 		syslog(LOG_ERR, "device-file in environment variable 'DEVNAME' not set");
 		exit(EXIT_FAILURE);
 	} else syslog(LOG_INFO, "started for device '%s'", device);
