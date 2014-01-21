@@ -28,16 +28,19 @@
 #include "dbus.h"
 #include "device.h"
 #include "daemon.h"
+
 #include "config.h"
+#include "log.h"
 
 int main (int argc, char **argv) {
 	/* init config */
 	crutilsd_config conf(argc, argv);
 
-	/* open syslog. We want to log to daemon and a PID is needed for each log entry,
-	 * because there may be multiple instances of this daemon. */
-	openlog("crutilsd", LOG_PID, LOG_DAEMON);
+	/* init log */
+	crutilsd_log log(&conf);
 
+
+	exit(EXIT_SUCCESS);
 
 	/* discard privilegs if they exist and daemonize */
 	if (!drop_privilegs()) exit(EXIT_FAILURE);

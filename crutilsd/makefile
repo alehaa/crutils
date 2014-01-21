@@ -8,11 +8,14 @@ LDFLAGS := -Wl,--as-needed
 LDLIBS  := $(PKG_LDFLAGS)
 
 
+%.o: %.c
+	$(CXX) -o $@ -c $(CFLAGS) $+
+
 %.o: %.cc
 	$(CXX) -o $@ -c $(CFLAGS) $+
 
 
-crutilsd: crutilsd.o config.o dbus.o keytoc.o device.o daemon.o
+crutilsd: crutilsd.o config.o dbus.o keytoc.o device.o daemon.o log.o
 	$(CXX) -o $@ $+ $(LDFLAGS) $(LDLIBS)
 
 

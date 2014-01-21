@@ -17,25 +17,27 @@
  * copyright 2013-2014 Alexander Haase
  */
 
-#ifndef CRUTILSD_CONFIG_H
-#define CRUTILSD_CONFIG_H
+#ifndef CRUTILSD_LOG_H
+#define CRUTILSD_LOG_H
 
-class crutilsd_config {
+#include <cstdio>
+
+#include "config.h"
+
+class crutilsd_log {
 	public:
-		crutilsd_config (int argc, char **argv);
+		crutilsd_log (crutilsd_config *p_config);
 
-		unsigned char get_conf_verbose_level ();
-		char * get_conf_device ();
+		void printf (const char *format, ...);
 
 	protected:
-		void print_usage ();
+		crutilsd_config *config;
+
+		void syslog_open ();
+		void syslog_close ();
 
 	private:
-		unsigned char conf_verbose_level;
-		char *conf_device;
-
-		void get_conf_by_argv (int argc, char **argv);
-		void get_conf_by_env ();
+		bool syslog_opened;
 };
 
 #endif

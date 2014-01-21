@@ -37,7 +37,7 @@ crutilsd_config::crutilsd_config (int argc, char **argv) {
 	/*
 	 * init class variables
 	 */
-	this->conf_verbose = false;
+	this->conf_verbose_level = 0;
 	this->conf_device = NULL;
 
 
@@ -53,8 +53,9 @@ crutilsd_config::crutilsd_config (int argc, char **argv) {
  */
 void crutilsd_config::print_usage () {
 	printf("usage: crutilsd (options) (device_file)\n\nlist of all options:\n");
-	printf("-v, --verbose\t\tprint all messages to stdout\n");
-	printf("    --device [file]\tdevicefile for codereader\n\t\t\tCould also be set as environment variable DEVNAME or as last comand line argument \n");
+	printf(" -v\t\t\tEnable verbose output. Number of -v flags increases verbose level\n");
+	printf("--verbose(=level)\tSame as -v but verbose level could be set with [level]\n");
+	printf("--device [file]\t\tdevicefile for codereader\n\t\t\tCould also be set as environment variable DEVNAME or as last comand line argument \n");
 }
 
 
@@ -64,7 +65,7 @@ void crutilsd_config::print_usage () {
  */
 void crutilsd_config::get_conf_by_argv (int argc, char **argv) {
 	static struct option long_options[] = {
-		{"verbose", no_argument, NULL, 'v'},
+		{"verbose", optional_argument, NULL, 'v'},
 		{"device", required_argument, NULL, 0}
 	};
 
@@ -83,7 +84,11 @@ void crutilsd_config::get_conf_by_argv (int argc, char **argv) {
 				break;
 
 			case 'v':
-				this->conf_verbose = true;
+				if (this->conf_verbose_level < 8) {
+					/* handle long option --verbose(=level), too */
+					if (optarg) this->conf_verbose_level = (unsigned char) atoi(optarg);
+					else this->conf_verbose_level++;
+				}
 				break;
 
 			default:
@@ -111,8 +116,8 @@ void crutilsd_config::get_conf_by_env () {
  *
  * return this->conf_verbose;
  */
-bool crutilsd_config::get_conf_verbose () {
-	return this->conf_verbose;
+unsigned char crutilsd_config::get_conf_verbose_level () {
+	return this->conf_verbose_level;
 }
 
 
