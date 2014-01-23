@@ -84,7 +84,7 @@ void crutilsd_config::get_conf_by_argv (int argc, char **argv) {
 				break;
 
 			case 'v':
-				if (this->conf_verbose_level < 8) {
+				if (this->conf_verbose_level < 3) {
 					/* handle long option --verbose(=level), too */
 					if (optarg) this->conf_verbose_level = (unsigned char) atoi(optarg);
 					else this->conf_verbose_level++;

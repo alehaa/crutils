@@ -39,7 +39,6 @@ int main (int argc, char **argv) {
 	/* init log */
 	crutilsd_log log(&conf);
 
-
 	exit(EXIT_SUCCESS);
 
 	/* discard privilegs if they exist and daemonize */

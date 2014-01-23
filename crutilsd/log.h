@@ -27,8 +27,9 @@
 class crutilsd_log {
 	public:
 		crutilsd_log (crutilsd_config *p_config);
+		~crutilsd_log ();
 
-		void printf (const char *format, ...);
+		void printf (int priority, const char *format, ...);
 
 	protected:
 		crutilsd_config *config;

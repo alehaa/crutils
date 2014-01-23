@@ -42,6 +42,15 @@ crutilsd_log::crutilsd_log (crutilsd_config *p_config) {
 }
 
 
+/* destructor
+ *
+ * close syslog connection
+ */
+crutilsd_log::~crutilsd_log () {
+	this->syslog_close();
+}
+
+
 /* syslog_open
  *
  * opens a syslog connection with openlog and sets a filter dependend on
@@ -69,9 +78,25 @@ void crutilsd_log::syslog_close () {
  * same as printf() but this function decides which messages are routed to
  * stdout / stderr or syslog
  */
-void crutilsd_log::printf (const char *format, ...) {
+void crutilsd_log::printf (int priority, const char *format, ...) {
+	/* parse arguments */
 	va_list args;
 	va_start(args, format);
-	vprintf (format, args);
+
+	/* open syslog connection if not already opened */
+	if (!this->syslog_opened) this->syslog_open();
+
+	/* send message to syslog */
+	vsyslog(priority, format, args);
+
+	/* print message to stdout */
+	char vlevel;
+	if ((vlevel = this->config->get_conf_verbose_level()) > 0) {
+		if (priority <= (vlevel + 4)) {
+			vprintf (format, args);
+			std::printf("\n");
+		}
+	}
+
 	va_end(args);
 }
