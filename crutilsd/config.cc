@@ -117,6 +117,10 @@ void crutilsd_config::get_conf_by_argv (int argc, char **argv) {
 				exit(EXIT_FAILURE);
 		}
 	}
+
+	if (optind < argc) {
+		this->conf_device = argv[optind];
+	}
 }
 
 

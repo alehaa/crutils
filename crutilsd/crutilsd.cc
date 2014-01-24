@@ -23,29 +23,28 @@
 #include <cstdlib>
 #include <cstdio>
 #include <csignal>
+#include <vector>
 
 #include <syslog.h>
 #include <pwd.h>
 #include <unistd.h>
 #include <sys/stat.h>
-
-#include "dbus.h"
-#include "device.h"
+#include <fcntl.h>
+#include <linux/input.h>
 
 #include "config.h"
+#include "dbus.h"
+#include "keytoc.h"
 #include "log.h"
 
 
-/* main loop
- *
- * initialisation and fetching codes by device
- */
 int main (int argc, char **argv) {
 	/* init config */
 	crutilsd_config config(argc, argv);
 
 	/* init log */
 	crutilsd_log log(&config);
+
 
 	/* drop root privilegs if should be done */
 	if (config.get_conf_daemon_user() != NULL) {
@@ -69,45 +68,91 @@ int main (int argc, char **argv) {
 	if (getuid() == 0) log.printf(LOG_WARNING, "warning: you are running with a privileged user");
 
 
-	/* daemonize, if configured */
-	if (config.get_conf_daemonize()) {
-		if (daemon(0, 0) < 0) exit(EXIT_FAILURE);
-	}
-
-	exit(EXIT_SUCCESS);
-
-
-
-	/* we could only do anything, if a device is given. Get path to device file by
-	 * environment variable 'DEVNAME' */
-	char* device = config.get_conf_device();
-	if (!device) {
-		syslog(LOG_ERR, "device-file in environment variable 'DEVNAME' not set");
+	/* open device file */
+	int device = open(config.get_conf_device(), O_RDONLY);
+	if (device < 0) {
+		log.printf(LOG_ERR, "could not open device-file '%s'", config.get_conf_device());
 		exit(EXIT_FAILURE);
-	} else syslog(LOG_INFO, "started for device '%s'", device);
+	}
+	log.printf(LOG_DEBUG, "opened device-file '%s'", config.get_conf_device());
+
+	/* Try to get exclusive rights for this device. Otherwise e.g. X11 might output
+	 * the same data as HID-input as we recive here. */
+	if (ioctl(device, EVIOCGRAB, 1) < 0) {
+		log.printf(LOG_ERR, "could not get exclusive rights for device");
+		exit(EXIT_FAILURE);
+	}
+	log.printf(LOG_ERR, "got exclusive rights for device");
 
 
-	/* Try to connect to D-BUS daemon */
+	/* open D-BUS connection */
 	crutilsd_dbus dbus;
 	if (!dbus.connect()) {
-		syslog(LOG_ERR, "could not open D-BUS connection");
+		log.printf(LOG_ERR, "could not open D-BUS connection");
 		exit(EXIT_FAILURE);
-	} else syslog(LOG_DEBUG, "connected to D-BUS");
+	} else log.printf(LOG_DEBUG, "connected to D-BUS");
 
-	/* open device */
-	crutilsd_device dev;
-	if (dev.open_device(device)) {
-		/* set dbus conection */
-		dev.set_dbus(&dbus);
 
-		/* listen device until device disconnects */
-		dev.listen();
-
-		/* device is disconnected. exit application */
-		syslog(LOG_INFO, "exiting");
-		exit(EXIT_SUCCESS);
+	/* daemonize, if configured */
+	if (config.get_conf_daemonize()) {
+		if (daemon(0, 0) < 0) {
+			log.printf(LOG_ERR, "error while daemonize process");
+			exit(EXIT_FAILURE);
+		}
+		log.printf(LOG_DEBUG, "daemonized process");
 	}
 
-	/* an error occured */
-	exit(EXIT_FAILURE);
+
+	/* start with read out the data. The chars are cached in the buffer and will be
+	 * sent as complete code after read operations via dbus to the clients. In order
+	 * to check after each input, if the last input event was the end of a code, the
+	 * buffer-size is one.
+	 *
+	 * The input is - as long as the code has not finished - temporarily stored in
+	 * a vector as buffer. Once the ending of a code is found, the complete buffer
+	 * will be send via D-BUS to all clients and buffer cleared.
+	 */
+	log.printf(LOG_INFO, "start listening for read codes");
+
+	struct input_event ev[1];
+	int rd, size = sizeof(struct input_event);
+	std::vector<char> buffer;
+	while (true) {
+		/* exit the while loop when an error occurs. This can also happen when the
+		 * device is removed. */
+		if ((rd = read(device, ev, size)) < size) break;
+
+		/* We only handle events of type EV_KEY. In addition, we treat only the press of
+		 * keys not release that to prevent the duplicate detecting the input. */
+		if (!(ev[0].type == EV_KEY && ev[0].value == 1)) continue;
+
+		/* translate key event to char */
+		char c = keytoc(&ev[0]);
+
+		/* keytoc () returns for all characters that can happen the valid characters.
+		 * If it is around the end of a code - represented by a globally KEY_ENTER - 0 is
+		 * returned. If an error occurs -1 is returned. */
+		if (c < 0) {
+			log.printf(LOG_NOTICE, "invalid char recognized. keycode: %i\n", ev[0].code);
+			continue;
+		}
+
+		/* add char to buffer */
+		buffer.push_back(c);
+
+		/* if c is 0, then this is the end of a code. Send the code to the custom
+		 * function */
+		if (c == 0) {
+			log.printf(LOG_DEBUG, "recived code '%s'", &buffer[0]);
+			dbus.send_code(&buffer[0]);
+
+			buffer.clear();
+		}
+	}
+
+	/* clean buffer */
+	buffer.clear();
+
+	log.printf(LOG_INFO, "stoped listening");
+	exit(EXIT_SUCCESS);
 }
