@@ -39,6 +39,8 @@ crutilsd_config::crutilsd_config (int argc, char **argv) {
 	 */
 	this->conf_verbose_level = 0;
 	this->conf_device = NULL;
+	this->conf_daemonize = true;
+	this->conf_daemon_user = NULL;
 
 
 	/* get config by comand line options and env vars */
@@ -52,10 +54,13 @@ crutilsd_config::crutilsd_config (int argc, char **argv) {
  * print a list of all avivable config params to stdout
  */
 void crutilsd_config::print_usage () {
-	printf("usage: crutilsd (options) (device_file)\n\nlist of all options:\n");
+	printf("usage: crutilsd (options) (device)\n\nlist of all options:\n");
 	printf(" -v\t\t\tEnable verbose output. Number of -v flags increases verbose level\n");
-	printf("--verbose(=level)\tSame as -v but verbose level could be set with [level]\n");
-	printf("--device [file]\t\tdevicefile for codereader\n\t\t\tCould also be set as environment variable DEVNAME or as last comand line argument \n");
+	printf("--verbose(=level)\tSame as -v but verbose level could be set with [level]\n\n");
+	printf("--device [file]\t\tdevicefile for codereader\n\t\t\tCould also be set as environment variable DEVNAME or as last comand line argument \n\n");
+	printf(" -d, --daemon\t\tdaemonize process after initialisation\n");
+	printf(" -f, --foreground\tdo not daemonize and leave process in front\n");
+	printf(" -u, --user [user]\tuser under which process runs\n");
 }
 
 
@@ -66,14 +71,17 @@ void crutilsd_config::print_usage () {
 void crutilsd_config::get_conf_by_argv (int argc, char **argv) {
 	static struct option long_options[] = {
 		{"verbose", optional_argument, NULL, 'v'},
-		{"device", required_argument, NULL, 0}
+		{"device", required_argument, NULL, 0},
+		{"daemon", no_argument, NULL, 'd'},
+		{"foreground", no_argument, NULL, 'f'},
+		{"user", required_argument, NULL, 'u'}
 	};
 
 
 	/* getopt_long stores the option index here. */
 	int option_index = 0;
 	char c;
-	while ((c = getopt_long(argc, argv, "v", long_options, &option_index)) != -1) {
+	while ((c = getopt_long(argc, argv, "dfu:v", long_options, &option_index)) != -1) {
 		switch (c) {
 			case 0:
 				switch (option_index) {
@@ -81,6 +89,18 @@ void crutilsd_config::get_conf_by_argv (int argc, char **argv) {
 						this->conf_device = optarg;
 						break;
 				}
+				break;
+
+			case 'd':
+				this->conf_daemonize = true;
+				break;
+
+			case 'f':
+				this->conf_daemonize = false;
+				break;
+
+			case 'u':
+				this->conf_daemon_user = optarg;
 				break;
 
 			case 'v':
@@ -127,4 +147,13 @@ unsigned char crutilsd_config::get_conf_verbose_level () {
  */
 char * crutilsd_config::get_conf_device () {
 	return this->conf_device;
+}
+
+
+/* get_conf_daemon_user
+ *
+ * return this->conf_daemon_user;
+ */
+char * crutilsd_config::get_conf_daemon_user () {
+	return this->conf_daemon_user;
 }

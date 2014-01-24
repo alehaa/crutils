@@ -24,6 +24,8 @@
 #include <cstdio>
 
 #include <syslog.h>
+#include <pwd.h>
+#include <unistd.h>
 
 #include "dbus.h"
 #include "device.h"
@@ -34,21 +36,48 @@
 
 int main (int argc, char **argv) {
 	/* init config */
-	crutilsd_config conf(argc, argv);
+	crutilsd_config config(argc, argv);
 
 	/* init log */
-	crutilsd_log log(&conf);
+	crutilsd_log log(&config);
+
+	/* drop root privilegs if should be done */
+	if(config.get_conf_daemon_user() != NULL) {
+		if(getuid() != 0) log.printf(LOG_WARNING, "could not discard privilegs: you are not root");
+		else {
+			struct passwd *user = getpwnam(config.get_conf_daemon_user());
+			if (user == NULL) {
+				log.printf(LOG_ERR, "could not discard privilegs: user %s does not exist", config.get_conf_daemon_user());
+				exit(EXIT_FAILURE);
+			}
+
+			if (setuid(user->pw_uid) == 0) log.printf(LOG_DEBUG, "privilegs discarded - running under user %s", config.get_conf_daemon_user());
+			else {
+				log.printf(LOG_ERR, "could not discard privilegs: an undefined error occured");
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
+
+	/* print warning if running under root */
+	if(getuid() == 0) log.printf(LOG_WARNING, "warning: you are running with a privileged user");
+
+
+
 
 	exit(EXIT_SUCCESS);
 
 	/* discard privilegs if they exist and daemonize */
 	if (!drop_privilegs()) exit(EXIT_FAILURE);
+
+	exit(EXIT_SUCCESS);
+
 	if (!daemonize()) exit(EXIT_FAILURE);
 
 
 	/* we could only do anything, if a device is given. Get path to device file by
 	 * environment variable 'DEVNAME' */
-	char* device = conf.get_conf_device();
+	char* device = config.get_conf_device();
 	if (!device) {
 		syslog(LOG_ERR, "device-file in environment variable 'DEVNAME' not set");
 		exit(EXIT_FAILURE);

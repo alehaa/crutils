@@ -23,6 +23,7 @@
 #include "log.h"
 
 #include <cstdarg>
+#include <cstdio>
 
 #include <syslog.h>
 
@@ -81,18 +82,20 @@ void crutilsd_log::syslog_close () {
 void crutilsd_log::printf (int priority, const char *format, ...) {
 	/* parse arguments */
 	va_list args;
-	va_start(args, format);
 
 	/* open syslog connection if not already opened */
 	if (!this->syslog_opened) this->syslog_open();
 
 	/* send message to syslog */
+	va_start(args, format);
 	vsyslog(priority, format, args);
 
 	/* print message to stdout */
-	char vlevel;
-	if ((vlevel = this->config->get_conf_verbose_level()) > 0) {
+	unsigned char vlevel = this->config->get_conf_verbose_level();
+	/* is vlevel > 0 ? */
+	if (vlevel) {
 		if (priority <= (vlevel + 4)) {
+			va_start(args, format);
 			vprintf (format, args);
 			std::printf("\n");
 		}

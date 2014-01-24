@@ -26,6 +26,8 @@ class crutilsd_config {
 
 		unsigned char get_conf_verbose_level ();
 		char * get_conf_device ();
+		bool get_conf_daemonize ();
+		char * get_conf_daemon_user ();
 
 	protected:
 		void print_usage ();
@@ -33,6 +35,8 @@ class crutilsd_config {
 	private:
 		unsigned char conf_verbose_level;
 		char *conf_device;
+		bool conf_daemonize;
+		char * conf_daemon_user;
 
 		void get_conf_by_argv (int argc, char **argv);
 		void get_conf_by_env ();

@@ -32,28 +32,6 @@
 #include <sys/stat.h>
 #include <cstdlib>
 
-/* drop_privilegs ()
- *
- * if current user is root, root-privilegs will be dropped.
- */
-bool drop_privilegs () {
-	if(getuid() == 0) {
-		struct passwd *usr = getpwnam("crutils");
-		if (usr != NULL) {
-			if (setuid(usr->pw_uid) == 0) {
-				syslog(LOG_DEBUG, "root-privileges discarded");
-				return true;
-			}
-		} else syslog(LOG_ERR, "user 'crutils' does not exists");
-
-		syslog(LOG_ERR, "Could not discard root-privilegs");
-		return false;
-	}
-
-	return true;
-}
-
-
 /* daemonize ()
  *
  * make this process to a daemon

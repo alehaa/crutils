@@ -20,8 +20,6 @@
 #ifndef CRUTILSD_LOG_H
 #define CRUTILSD_LOG_H
 
-#include <cstdio>
-
 #include "config.h"
 
 class crutilsd_log {

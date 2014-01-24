@@ -23,5 +23,4 @@
  */
 
 /* function declarations */
-bool drop_privilegs ();
 bool daemonize();
