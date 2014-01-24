@@ -28,9 +28,11 @@
 /* constructor ()
  * init this class
  */
-crutilsd_dbus::crutilsd_dbus () {
+crutilsd_dbus::crutilsd_dbus (crutilsd_log *p_log) {
 	this->dbus_connection = NULL;
 	dbus_error_init(&this->dbus_error);
+
+	this->log = p_log;
 }
 
 
@@ -52,7 +54,7 @@ bool crutilsd_dbus::connect () {
 	if (this->dbus_connection) return true;
 
 	/* an error occured */
-	syslog(LOG_ERR, "Failed to connect to D-BUS daemon: %s\n", this->dbus_error.message);
+	this->log->printf(LOG_ERR, "Failed to connect to D-BUS daemon: %s\n", this->dbus_error.message);
 	dbus_error_free(&this->dbus_error);
 
 	return false;

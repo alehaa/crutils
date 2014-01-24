@@ -25,18 +25,21 @@
 
 #include <dbus/dbus.h>
 
+#include "log.h"
+
 class crutilsd_dbus {
 	public:
-		crutilsd_dbus();
+		crutilsd_dbus(crutilsd_log *p_log);
 		~crutilsd_dbus();
 
 		bool connect();
 		void send_code (const char *p_code);
 
-
 	protected:
 		DBusConnection *dbus_connection;
 		DBusError dbus_error;
+
+		crutilsd_log *log;
 };
 
 #endif

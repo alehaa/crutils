@@ -86,7 +86,7 @@ int main (int argc, char **argv) {
 
 
 	/* open D-BUS connection */
-	crutilsd_dbus dbus;
+	crutilsd_dbus dbus(&log);
 	if (!dbus.connect()) {
 		log.printf(LOG_ERR, "could not open D-BUS connection");
 		exit(EXIT_FAILURE);
