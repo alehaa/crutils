@@ -22,18 +22,75 @@
  */
 #include <cstdlib>
 #include <cstdio>
+#include <csignal>
 
 #include <syslog.h>
 #include <pwd.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include "dbus.h"
 #include "device.h"
-#include "daemon.h"
 
 #include "config.h"
 #include "log.h"
 
+
+/* daemonize ()
+ *
+ * make this process to a daemon
+ */
+bool daemonize (crutilsd_log *log) {
+	/* fork parent */
+	pid_t pid;
+	pid = fork();
+	if (pid < 0) {
+		/* an error occured */
+		log->printf(LOG_ERR, "error while forking process");
+		exit(EXIT_FAILURE);
+	} else {
+		/* kill the parent */
+		if (pid > 0) exit(EXIT_SUCCESS);
+
+		/* create a new session */
+		if (setsid() < 0) {
+			log->printf(LOG_ERR, "error while generate new session in forked process");
+			exit (EXIT_FAILURE);
+		} else {
+			/* ignore SIGHUP */
+			signal(SIGHUP, SIG_IGN);
+
+			/* fork the forked process to prevent zombie-processes */
+			pid = fork();
+			if (pid < 0) {
+				/* an error occured */
+				log->printf(LOG_ERR, "error while second forking process");
+				exit(EXIT_FAILURE);
+			} else {
+				/* kill the parent */
+				if (pid > 0) exit(EXIT_SUCCESS);
+
+				/* change working dir */
+				chdir ("/");
+
+				/* don't use umask of parrent processes */
+				umask (0);
+
+				/* close all file descriptors (STDOUT, STDERR, etc. */
+				for (int i = sysconf (_SC_OPEN_MAX); i > 0; i--) close (i);
+
+				log->printf(LOG_INFO, "daemonized process");
+				return true;
+			}
+		}
+	}
+}
+
+
+/* main loop
+ *
+ * initialisation and fetching codes by device
+ */
 int main (int argc, char **argv) {
 	/* init config */
 	crutilsd_config config(argc, argv);
@@ -42,8 +99,8 @@ int main (int argc, char **argv) {
 	crutilsd_log log(&config);
 
 	/* drop root privilegs if should be done */
-	if(config.get_conf_daemon_user() != NULL) {
-		if(getuid() != 0) log.printf(LOG_WARNING, "could not discard privilegs: you are not root");
+	if (config.get_conf_daemon_user() != NULL) {
+		if (getuid() != 0) log.printf(LOG_WARNING, "could not discard privilegs: you are not root");
 		else {
 			struct passwd *user = getpwnam(config.get_conf_daemon_user());
 			if (user == NULL) {
@@ -60,19 +117,14 @@ int main (int argc, char **argv) {
 	}
 
 	/* print warning if running under root */
-	if(getuid() == 0) log.printf(LOG_WARNING, "warning: you are running with a privileged user");
+	if (getuid() == 0) log.printf(LOG_WARNING, "warning: you are running with a privileged user");
 
 
-
-
-	exit(EXIT_SUCCESS);
-
-	/* discard privilegs if they exist and daemonize */
-	if (!drop_privilegs()) exit(EXIT_FAILURE);
+	/* daemonize, if configured */
+	if (config.get_conf_daemonize()) daemonize(&log);
 
 	exit(EXIT_SUCCESS);
 
-	if (!daemonize()) exit(EXIT_FAILURE);
 
 
 	/* we could only do anything, if a device is given. Get path to device file by

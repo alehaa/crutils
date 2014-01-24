@@ -15,7 +15,7 @@ LDLIBS  := $(PKG_LDFLAGS)
 	$(CXX) -o $@ -c $(CFLAGS) $+
 
 
-crutilsd: crutilsd.o config.o dbus.o keytoc.o device.o daemon.o log.o
+crutilsd: crutilsd.o config.o log.o dbus.o keytoc.o device.o
 	$(CXX) -o $@ $+ $(LDFLAGS) $(LDLIBS)
 
 

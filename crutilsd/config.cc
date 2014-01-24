@@ -150,6 +150,15 @@ char * crutilsd_config::get_conf_device () {
 }
 
 
+/* get_conf_daemonize
+ *
+ * return this->conf_daemonize;
+ */
+bool crutilsd_config::get_conf_daemonize () {
+	return this->conf_daemonize;
+}
+
+
 /* get_conf_daemon_user
  *
  * return this->conf_daemon_user;
