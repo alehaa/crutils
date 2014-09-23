@@ -20,11 +20,12 @@
 /*
  * include header-files
  */
-#include "keytoc.h"
+#include "lxinput.h"
+
 
 const char keytoc(struct input_event *p_ev) {
 	/* is this an enter signal? */
-	if (p_ev->code == KEY_ENTER) return 0;
+	if (p_ev->code == KEY_ENTER) return '\0';
 
 	/* numeric values */
 	switch (p_ev->code) {

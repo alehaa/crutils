@@ -27,7 +27,9 @@
 #
 
 
+# set driver path
+set(CRUTILSD_DRIVER_PATH "usr/lib/crutils/driver")
+
+
 # recurse into subdirectories
-add_subdirectory(crutilsd)
-add_subdirectory(drivers)
-add_subdirectory(libcrutils)
+add_subdirectory(lxinput)

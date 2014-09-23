@@ -35,10 +35,9 @@ add_executable(crutilsd
 	crutilsd.cpp
 	config.cpp
 	dbus.cpp
-	keytoc.cpp
 	log.cpp
 )
 
-target_link_libraries(crutilsd "-ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lglib-2.0")
+target_link_libraries(crutilsd "-ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lglib-2.0" driver_lxinput)
 
 install(TARGETS crutilsd DESTINATION bin)

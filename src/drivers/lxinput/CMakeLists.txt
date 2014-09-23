@@ -27,7 +27,17 @@
 #
 
 
-# recurse into subdirectories
-add_subdirectory(crutilsd)
-add_subdirectory(drivers)
-add_subdirectory(libcrutils)
+# build plugin
+add_library(driver_lxinput SHARED
+	open.c
+	close.c
+	keytoc.c
+	read.c
+)
+
+
+# install plugin
+install(TARGETS driver_lxinput
+	DESTINATION ${CRUTILSD_DRIVER_PATH}
+	RENAME lxinput.so
+)

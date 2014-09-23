@@ -60,7 +60,7 @@ if (BUILD_DOCUMENTATION)
 		COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
 		MAIN_DEPENDENCY ${doxyfile} ${doxyfile_in}
 
-		DEPENDS crutilsd crutils
+		DEPENDS crutilsd driver_lxinput crutils
 
 		COMMENT "Generating documentation"
 	)

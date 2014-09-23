@@ -10,14 +10,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License and GNU
+ * Lesser General Public License along with this program. If not, see
+ *
+ *  http://www.gnu.org/licenses/
  *
  *
- * copyright 2013-2014 Alexander Haase
+ * Copyright (C)
+ *  2013-2014 Alexander Haase <alexander.haase@rwth-aachen.de>
  */
 
+
+/* include header-files
+ */
+#include <unistd.h>
 #include <linux/input.h>
 
 
+int crutilsd_device_open (const char* device);
+int crutilsd_device_close (const int fd);
 const char keytoc(struct input_event *p_ev);
+ssize_t crutilsd_device_read (int device_fd, char *buffer, size_t length);

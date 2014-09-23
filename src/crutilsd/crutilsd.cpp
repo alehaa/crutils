@@ -29,13 +29,15 @@
 #include <pwd.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <fcntl.h>
 #include <linux/input.h>
 
 #include "config.h"
 #include "dbus.h"
-#include "keytoc.h"
 #include "log.h"
+
+extern "C" {
+#include "../drivers/lxinput/lxinput.h"
+}
 
 
 int main (int argc, char **argv) {
@@ -69,20 +71,12 @@ int main (int argc, char **argv) {
 
 
 	/* open device file */
-	int device = open(config.get_conf_device(), O_RDONLY);
+	int device = crutilsd_device_open(config.get_conf_device());
 	if (device < 0) {
 		log.printf(LOG_ERR, "could not open device-file '%s'", config.get_conf_device());
 		exit(EXIT_FAILURE);
 	}
 	log.printf(LOG_DEBUG, "opened device-file '%s'", config.get_conf_device());
-
-	/* Try to get exclusive rights for this device. Otherwise e.g. X11 might output
-	 * the same data as HID-input as we recive here. */
-	if (ioctl(device, EVIOCGRAB, 1) < 0) {
-		log.printf(LOG_ERR, "could not get exclusive rights for device");
-		exit(EXIT_FAILURE);
-	}
-	log.printf(LOG_ERR, "got exclusive rights for device");
 
 
 	/* open D-BUS connection */
@@ -114,44 +108,13 @@ int main (int argc, char **argv) {
 	 */
 	log.printf(LOG_INFO, "start listening for read codes");
 
-	struct input_event ev[1];
-	int rd, size = sizeof(struct input_event);
-	std::vector<char> buffer;
-	while (true) {
-		/* exit the while loop when an error occurs. This can also happen when the
-		 * device is removed. */
-		if ((rd = read(device, ev, size)) < size) break;
-
-		/* We only handle events of type EV_KEY. In addition, we treat only the press of
-		 * keys not release that to prevent the duplicate detecting the input. */
-		if (!(ev[0].type == EV_KEY && ev[0].value == 1)) continue;
-
-		/* translate key event to char */
-		char c = keytoc(&ev[0]);
-
-		/* keytoc () returns for all characters that can happen the valid characters.
-		 * If it is around the end of a code - represented by a globally KEY_ENTER - 0 is
-		 * returned. If an error occurs -1 is returned. */
-		if (c < 0) {
-			log.printf(LOG_NOTICE, "invalid char recognized. keycode: %i\n", ev[0].code);
-			continue;
-		}
-
-		/* add char to buffer */
-		buffer.push_back(c);
-
-		/* if c is 0, then this is the end of a code. Send the code to the custom
-		 * function */
-		if (c == 0) {
-			log.printf(LOG_DEBUG, "recived code '%s'", &buffer[0]);
-			dbus.send_code(&buffer[0]);
-
-			buffer.clear();
-		}
+	char buffer[256];
+	while (crutilsd_device_read(device, buffer, 256) >= 0) {
+		log.printf(LOG_DEBUG, "recived code '%s'", buffer);
+		dbus.send_code(buffer);
 	}
 
-	/* clean buffer */
-	buffer.clear();
+	crutilsd_device_close(device);
 
 	log.printf(LOG_INFO, "stoped listening");
 	exit(EXIT_SUCCESS);
