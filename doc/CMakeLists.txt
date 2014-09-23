@@ -27,18 +27,30 @@
 #
 
 
-# minimum required cmake version
-cmake_minimum_required(VERSION 2.6)
+#
+# add a target to generate documentation with Doxygen
+#
+find_package(Doxygen)
+if (DOXYGEN_FOUND)
+	option(BUILD_DOCUMENTATION "Create HTML based documentation" ON)
+
+	if (BUILD_DOCUMENTATION)
+		set(doxyfile_in "${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf.in")
+		set(doxyfile "${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf")
+		set(doxy_output_root "${CMAKE_CURRENT_BINARY_DIR}")
+		set(doxy_html_index_file "${doxy_output_root}/html/index.html")
 
 
-#
-# project information
-#
-project("crutils")
+		configure_file(${doxyfile_in} ${doxyfile} @ONLY)
 
+		add_custom_command (OUTPUT ${doxy_html_index_file}
+			COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
+			MAIN_DEPENDENCY ${doxyfile} ${doxyfile_in}
+			COMMENT "Generating documentation"
+		)
 
-#
-# recurse into subdirectories
-#
-add_subdirectory(src)
-add_subdirectory(doc)
+		add_custom_target(doc ALL DEPENDS ${doxy_html_index_file})
+
+		install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION share/doc)
+	endif (BUILD_DOCUMENTATION)
+endif (DOXYGEN_FOUND)
