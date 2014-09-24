@@ -32,4 +32,9 @@ set(CRUTILSD_DRIVER_PATH "usr/lib/crutils/driver")
 
 
 # recurse into subdirectories
-add_subdirectory(lxinput)
+#
+
+# Linux-specific drivers
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+	add_subdirectory(lxinput)
+endif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
