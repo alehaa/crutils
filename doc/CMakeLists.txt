@@ -18,45 +18,30 @@
 #   2013-2016 Alexander Haase <ahaase@alexhaase.de>
 #
 
+# Doxygen documentation.
+#
+option(BUILD_DOCUMENTATION "Create HTML documentation" Off)
 
-#
-# configuration
-#
 set(doxyfile_in "${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf.in")
 set(doxyfile "${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf")
 set(doxy_output_root "${CMAKE_CURRENT_BINARY_DIR}")
 set(doxy_html_index_file "${doxy_output_root}/html/index.html")
 
-
-#
-# add a target to generate documentation with Doxygen
-#
-option(BUILD_DOCUMENTATION "Create HTML based documentation" ON)
-
 if (BUILD_DOCUMENTATION)
-	# try to find doxygen
-	find_package(Doxygen)
+	find_package(Doxygen REQUIRED)
 
-	# print error, if doxygen was not found
-	if (NOT DOXYGEN_FOUND)
-		message(FATAL_ERROR "Doxygen is needed to build the documentation.")
-	endif (NOT DOXYGEN_FOUND)
+	if (NOT DOXYGEN_DOT_EXECUTABLE)
+		set(DOXYGEN_DOT_EXECUTABLE "")
+	endif ()
 
-
-	# configure doxyfile
 	configure_file(${doxyfile_in} ${doxyfile} @ONLY)
 
-
-	# add commands to run doxygen
 	add_custom_command (OUTPUT ${doxy_html_index_file}
 		COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
 		MAIN_DEPENDENCY ${doxyfile} ${doxyfile_in}
-
 		DEPENDS crutilsd crutils
-
 		COMMENT "Generating documentation"
 	)
-
 	add_custom_target(doc ALL DEPENDS ${doxy_html_index_file})
 
 

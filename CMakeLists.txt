@@ -18,19 +18,16 @@
 #   2013-2016 Alexander Haase <ahaase@alexhaase.de>
 #
 
-
 # minimum required cmake version
 cmake_minimum_required(VERSION 2.6)
 
 
+# Project information.
 #
-# project information
-#
-project("crutils")
+project("crutils" C CXX)
 
 
-#
-# recurse into subdirectories
+# Recurse into subdirectories.
 #
 add_subdirectory(src)
 add_subdirectory(doc)
