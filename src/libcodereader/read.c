@@ -18,7 +18,25 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-#include <linux/input.h>
+#include "codereader-internal.h"
+
+#include <string.h>
 
 
-const char keytoc(struct input_event *p_ev);
+/** \brief Read data from codereader device.
+ *
+ *
+ * \param cookie Unused.
+ * \param buf Destination buffer.
+ * \param size Size of \p buf.
+ *
+ * \return Number of integers read.
+ * \return A negative value indicates an error.
+ */
+CODEREADER_INTERNAL
+ssize_t
+codereader_read(void *cookie, char *buf, size_t size)
+{
+	strncpy(buf, "Hello\0", size);
+	return 7;
+}

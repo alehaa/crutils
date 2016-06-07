@@ -18,26 +18,27 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-#ifndef CRUTILSD_LOG_H
-#define CRUTILSD_LOG_H
+#include "codereader-internal.h"
 
-#include "config.h"
+#include <stdlib.h> // free
 
-class crutilsd_log {
-	public:
-		crutilsd_log (crutilsd_config *p_config);
-		~crutilsd_log ();
 
-		void printf (int priority, const char *format, ...);
+/** \brief Close the codereader stream.
+ *
+ * \details This function will free all internal memory allocated by previous
+ *  function calls.
+ *
+ *
+ * \param cookie Pointer to codereader stream cookie.
+ *
+ * \return 0 \p cookie successfully destroyed.
+ * \return EOF An error occured.
+ */
+CODEREADER_INTERNAL
+int
+codereader_close(void *cookie)
+{
+	free(cookie);
 
-	protected:
-		crutilsd_config *config;
-
-		void syslog_open ();
-		void syslog_close ();
-
-	private:
-		bool syslog_opened;
-};
-
-#endif
+	return 0;
+}

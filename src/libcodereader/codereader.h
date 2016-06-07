@@ -18,29 +18,14 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-#ifndef CRUTILSD_CONFIG_H
-#define CRUTILSD_CONFIG_H
+#ifndef CODEREADER_H
+#define CODEREADER_H
 
-class crutilsd_config {
-	public:
-		crutilsd_config (int argc, char **argv);
 
-		unsigned char get_conf_verbose_level ();
-		char * get_conf_device ();
-		bool get_conf_daemonize ();
-		char * get_conf_daemon_user ();
+#include <stdio.h> // FILE
 
-	protected:
-		void print_usage ();
 
-	private:
-		unsigned char conf_verbose_level;
-		char *conf_device;
-		bool conf_daemonize;
-		char * conf_daemon_user;
+FILE *codereader_open();
 
-		void get_conf_by_argv (int argc, char **argv);
-		void get_conf_by_env ();
-};
 
 #endif

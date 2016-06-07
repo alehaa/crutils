@@ -18,23 +18,9 @@
 #   2013-2016 Alexander Haase <ahaase@alexhaase.de>
 #
 
-include_directories("/usr/include/dbus-1.0")
-include_directories("/usr/lib/x86_64-linux-gnu/dbus-1.0/include")
-include_directories("/usr/include/glib-2.0")
-include_directories("/usr/lib/x86_64-linux-gnu/glib-2.0/include")
+add_library(codereader SHARED open.c close.c read.c)
+add_sanitizers(codereader)
+add_coverage(codereader)
 
-add_library(crutils SHARED
-	main.cpp
-	crutils.cpp
-	crutils_dbus.cpp
-	crutils_thread.cpp
-)
-
-set_target_properties(crutils PROPERTIES
-	VERSION 1.0.0
-	SOVERSION 1
-)
-
-target_link_libraries(crutils "-ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lglib-2.0")
-
-install(TARGETS crutils DESTINATION lib)
+install(TARGETS codereader LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+install(FILES codereader.h DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
