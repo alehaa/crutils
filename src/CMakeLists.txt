@@ -18,7 +18,11 @@
 #   2013-2016 Alexander Haase <ahaase@alexhaase.de>
 #
 
+include(CChelper) # Enable compiler warnings.
 
-# recurse into subdirectories
+find_package(Sanitizers) # Find sanitizers
+
+
+# Recurse into subdirectories.
 add_subdirectory(crutilsd)
 add_subdirectory(libcrutils)

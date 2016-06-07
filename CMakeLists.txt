@@ -27,7 +27,23 @@ cmake_minimum_required(VERSION 2.6)
 project("crutils" C CXX)
 
 
+# CMake configuration.
+#
+set(CMAKE_MODULE_PATH
+	"${CMAKE_SOURCE_DIR}/externals/CMake-sanitizers/cmake"
+	"${CMAKE_SOURCE_DIR}/externals/CMake-codecov/cmake"
+	"${CMAKE_SOURCE_DIR}/externals/CMake-CChelper/cmake"
+	${CMAKE_MODULE_PATH})
+
+# Enable code coverage.
+find_package(codecov)
+
+
 # Recurse into subdirectories.
 #
 add_subdirectory(src)
 add_subdirectory(doc)
+
+
+# Evaluate coverage data.
+coverage_evaluate()

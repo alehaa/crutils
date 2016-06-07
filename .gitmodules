@@ -1,0 +1,9 @@
+[submodule "externals/CMake-sanitizers"]
+	path = externals/CMake-sanitizers
+	url = https://github.com/RWTH-ELP/CMake-sanitizers.git
+[submodule "externals/CMake-codecov"]
+	path = externals/CMake-codecov
+	url = https://github.com/RWTH-ELP/CMake-codecov.git
+[submodule "externals/CMake-CChelper"]
+	path = externals/CMake-CChelper
+	url = https://github.com/alehaa/CMake-CChelper.git
