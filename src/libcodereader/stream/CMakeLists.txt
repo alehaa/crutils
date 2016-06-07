@@ -18,19 +18,6 @@
 #   2013-2016 Alexander Haase <ahaase@alexhaase.de>
 #
 
-include(CChelper)       # Enable compiler warnings.
-include(GNUInstallDirs) # Install paths.
-include(easylib)        # Activate easylib interface.
-
-find_package(Sanitizers)   # Find sanitizers
-find_package(C99 REQUIRED) # C99 support.
-
-
-# Enable C99 for all targets. We are using mixed C++ style comments for doxygen
-# and mixed declarations and code, so we need C99 to satisfy the compiler in
-# pedantic mode (enabled by CChelper above)
-add_definitions(${C99_FLAGS})
-
-
-# Recurse into subdirectories.
-add_subdirectory(libcodereader)
+add_library(codereader-stream OBJECT open.c close.c read.c)
+add_sanitizers(codereader-stream)
+add_coverage(codereader-stream)

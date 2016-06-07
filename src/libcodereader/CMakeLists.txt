@@ -18,7 +18,17 @@
 #   2013-2016 Alexander Haase <ahaase@alexhaase.de>
 #
 
-add_library(codereader SHARED open.c close.c read.c)
+# Include all subdirectories to make header files available to all other object
+# libraries.
+include_directories(. stream)
+
+
+# Recurse into subdirectories.
+add_subdirectory(stream)
+
+
+
+add_library(codereader SHARED $<TARGET_OBJECTS:codereader-stream> empty.c)
 add_sanitizers(codereader)
 add_coverage(codereader)
 

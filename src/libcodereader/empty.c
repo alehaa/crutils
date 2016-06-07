@@ -17,22 +17,3 @@
  * Copyright (C)
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
-
-
-/* This header file is for internal functions, which should not be used public.
- * Functions defined in this header are non-stable and may change in future
- * releases! */
-
-#ifndef CODEREADER_INTERNAL_H
-#define CODEREADER_INTERNAL_H
-
-
-/** \brief Mark function as internal.
- *
- * \details This macro will be used to mark functions as internal functions,
- *  which will be hidden for global exports.
- */
-#define CODEREADER_INTERNAL __attribute__((visibility("hidden")))
-
-
-#endif

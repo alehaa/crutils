@@ -18,21 +18,27 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
+#include "stream.h"
 
-/* This header file is for internal functions, which should not be used public.
- * Functions defined in this header are non-stable and may change in future
- * releases! */
+#include <string.h>
 
-#ifndef CODEREADER_INTERNAL_H
-#define CODEREADER_INTERNAL_H
+#include "codereader-internal.h" // CODEREADER_INTERNAL
 
 
-/** \brief Mark function as internal.
+/** \brief Read data from codereader device.
  *
- * \details This macro will be used to mark functions as internal functions,
- *  which will be hidden for global exports.
+ *
+ * \param cookie Unused.
+ * \param buf Destination buffer.
+ * \param size Size of \p buf.
+ *
+ * \return Number of integers read.
+ * \return A negative value indicates an error.
  */
-#define CODEREADER_INTERNAL __attribute__((visibility("hidden")))
-
-
-#endif
+CODEREADER_INTERNAL
+ssize_t
+codereader_read(void *cookie, char *buf, size_t size)
+{
+	strncpy(buf, "Hello\0", size);
+	return 7;
+}

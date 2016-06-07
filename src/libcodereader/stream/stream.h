@@ -18,27 +18,19 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-#include "codereader-internal.h"
+/* This header file is for internal functions, which should not be used public.
+ * Functions defined in this header are non-stable and may change in future
+ * releases! */
 
-#include <stdlib.h> // free
+#ifndef CODEREADER_STREAM_H
+#define CODEREADER_STREAM_H
 
 
-/** \brief Close the codereader stream.
- *
- * \details This function will free all internal memory allocated by previous
- *  function calls.
- *
- *
- * \param cookie Pointer to codereader stream cookie.
- *
- * \return 0 \p cookie successfully destroyed.
- * \return EOF An error occured.
- */
-CODEREADER_INTERNAL
-int
-codereader_close(void *cookie)
-{
-	free(cookie);
+#include <stdio.h> // ssize_t, size_t
 
-	return 0;
-}
+
+ssize_t codereader_read(void *cookie, char *buf, size_t size);
+int codereader_close(void *cookie);
+
+
+#endif

@@ -18,25 +18,29 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-#include "codereader-internal.h"
+#include "stream.h"
 
-#include <string.h>
+#include <stdlib.h> // free
+
+#include "codereader-internal.h" // CODEREADER_INTERNAL
 
 
-/** \brief Read data from codereader device.
+/** \brief Close the codereader stream.
+ *
+ * \details This function will free all internal memory allocated by previous
+ *  function calls.
  *
  *
- * \param cookie Unused.
- * \param buf Destination buffer.
- * \param size Size of \p buf.
+ * \param cookie Pointer to codereader stream cookie.
  *
- * \return Number of integers read.
- * \return A negative value indicates an error.
+ * \return 0 \p cookie successfully destroyed.
+ * \return EOF An error occured.
  */
 CODEREADER_INTERNAL
-ssize_t
-codereader_read(void *cookie, char *buf, size_t size)
+int
+codereader_close(void *cookie)
 {
-	strncpy(buf, "Hello\0", size);
-	return 7;
+	free(cookie);
+
+	return 0;
 }

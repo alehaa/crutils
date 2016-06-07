@@ -7,3 +7,6 @@
 [submodule "externals/CMake-CChelper"]
 	path = externals/CMake-CChelper
 	url = https://github.com/alehaa/CMake-CChelper.git
+[submodule "externals/CMake-easylib"]
+	path = externals/CMake-easylib
+	url = https://github.com/alehaa/CMake-easylib.git

@@ -23,9 +23,9 @@
 
 #include "codereader.h"
 
-#include <stdio.h> // IO functions
+#include <stdio.h> // IO functions and types
 
-#include "codereader-internal.h"
+#include "stream.h"
 
 
 /** \brief Open a new handle to read barcodes with barcode readers.
