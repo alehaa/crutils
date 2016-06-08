@@ -33,8 +33,8 @@ typedef enum errorcodes {
 
 const char *codereader_strerror(const int errno);
 
+int codereader_open(const char *path);
+int codereader_close(const int fd);
+ssize_t codereader_read(const int fd, char *buffer, size_t size);
 
-int crutilsd_device_open (const char *device);
-int crutilsd_device_close (const int fd);
 const char keytoc(struct input_event *p_ev);
-ssize_t crutilsd_device_read (int device_fd, char *buffer, size_t length);

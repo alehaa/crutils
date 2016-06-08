@@ -31,16 +31,16 @@
  *  filedescriptor on success.
  *
  *
- * \param device C-string containing the path of the device to be opened *
+ * \param path C-string containing the path of the device to be opened *
  *
  * \return Returns the new file-descriptor on success. On any error, a negative
  *  value inidicating the error will be returned.
  */
 int
-crutilsd_device_open(const char *device)
+codereader_open(const char *path)
 {
 	/* Try to open the device file. */
-	int fd = open(device, O_RDONLY);
+	int fd = open(path, O_RDONLY);
 	if (fd < 0)
 		return ERR_OPEN;
 

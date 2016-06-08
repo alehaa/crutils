@@ -31,15 +31,15 @@
  *  until barcode ends and copies it into \p buffer.
  *
  *
- * \param device_fd file-descriptor for opened device-file
+ * \param fd file-descriptor for opened device-file
  * \param buffer pointer to an array of char where code should be stored
- * \param length maximum bytes to be read
+ * \param size maximum bytes to be read
  *
  * \return On success, the number of bytes read is returned. On any error, a
  *  negative value inidicating the error will be returned.
  */
 ssize_t
-crutilsd_device_read(int device_fd, char *buffer, size_t length)
+codereader_read(const int fd, char *buffer, size_t size)
 {
 	struct input_event ev;
 	size_t input_event_size = sizeof(ev);
@@ -47,9 +47,9 @@ crutilsd_device_read(int device_fd, char *buffer, size_t length)
 	size_t num = 0;
 
 
-	while (num < length) {
+	while (num < size) {
 		// read one input event
-		if (read(device_fd, &ev, input_event_size) < input_event_size)
+		if (read(fd, &ev, input_event_size) < input_event_size)
 			return ERR_READ;
 
 

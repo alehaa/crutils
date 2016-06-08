@@ -72,7 +72,7 @@ int main (int argc, char **argv) {
 
 
 	/* open device file */
-	int device = crutilsd_device_open(config.get_conf_device());
+	int device = codereader_open(config.get_conf_device());
 	if (device < 0) {
 		log.printf(LOG_ERR, "could not open device-file '%s'", config.get_conf_device());
 		exit(EXIT_FAILURE);
@@ -110,12 +110,12 @@ int main (int argc, char **argv) {
 	log.printf(LOG_INFO, "start listening for read codes");
 
 	char buffer[256];
-	while (crutilsd_device_read(device, buffer, 256) >= 0) {
+	while (codereader_read(device, buffer, 256) >= 0) {
 		log.printf(LOG_DEBUG, "recived code '%s'", buffer);
 		dbus.send_code(buffer);
 	}
 
-	crutilsd_device_close(device);
+	codereader_close(device);
 
 	log.printf(LOG_INFO, "stoped listening");
 	exit(EXIT_SUCCESS);

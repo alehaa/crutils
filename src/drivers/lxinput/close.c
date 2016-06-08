@@ -35,7 +35,7 @@
  *  the error will be returned.
  */
 int
-crutilsd_device_close(const int fd)
+codereader_close(const int fd)
 {
 	/* Try to ungrab device, so that other processes (e.g. by X11) may receive
 	 * events by this device. */
