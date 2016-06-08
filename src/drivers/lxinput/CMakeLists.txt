@@ -20,7 +20,7 @@
 
 
 # build plugin
-add_library(driver_lxinput SHARED
+add_library(driver-lxinput MODULE
 	open.c
 	close.c
 	keytoc.c
@@ -28,9 +28,8 @@ add_library(driver_lxinput SHARED
 	strerror.c
 )
 
+set_target_properties(driver-lxinput PROPERTIES OUTPUT_NAME "lxinput" PREFIX "")
+
 
 # install plugin
-install(TARGETS driver_lxinput
-	DESTINATION ${CRUTILSD_DRIVER_PATH}
-	RENAME lxinput.so
-)
+install(TARGETS driver-lxinput DESTINATION ${CRUTILSD_DRIVER_PATH})
