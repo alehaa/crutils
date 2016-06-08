@@ -18,11 +18,20 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-
-/* include header-files
- */
-#include <unistd.h>
 #include <linux/input.h>
+#include <limits.h>
+
+
+typedef enum errorcodes {
+	ERR_OPEN = INT_MIN,
+	ERR_CLOSE,
+	ERR_READ,
+	ERR_GRAB,
+	ERR_UNGRAB
+} errorcodes;
+
+
+const char *codereader_strerror(const int errno);
 
 
 int crutilsd_device_open (const char *device);

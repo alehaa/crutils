@@ -18,16 +18,9 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-
-/* include header-files
- */
 #include "lxinput.h"
 
 #include <unistd.h>
-#include <syslog.h>
-#include <string.h>
-#include <errno.h>
-#include <sys/ioctl.h>
 #include <linux/input.h>
 
 
@@ -38,30 +31,21 @@
  *
  * \param fd File-descriptor to be closed.
  *
- * \return Returns zero on success. On error, -1 is returned and an error
- *  message will be send to syslog.
+ * \return Returns zero on success. On any error, a negative value inidicating
+ *  the error will be returned.
  */
 int
-crutilsd_device_close (const int fd)
+crutilsd_device_close(const int fd)
 {
 	/* Try to ungrab device, so that other processes (e.g. by X11) may receive
-	 * events by this device.
-	 */
-	if (ioctl(fd, EVIOCGRAB, 0) < 0) {
-		syslog(LOG_ERR, "[%s] unable to ungrab device '%d': %s",
-			"lxinput", fd, strerror(errno));
-
-		return -1;
-	}
+	 * events by this device. */
+	if (ioctl(fd, EVIOCGRAB, 0) < 0)
+		return ERR_UNGRAB;
 
 
 	// close device handler
-	if (close(fd) < 0) {
-		syslog(LOG_ERR, "[%s] unable to close device '%d': %s",
-			"lxinput", fd, strerror(errno));
-
-		return -1;
-	}
+	if (close(fd) < 0)
+		return ERR_CLOSE;
 
 
 	return 0;

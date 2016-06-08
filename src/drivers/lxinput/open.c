@@ -18,16 +18,10 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-
-/* include header-files
- */
 #include "lxinput.h"
 
 #include <fcntl.h>
-#include <syslog.h>
-#include <string.h>
-#include <errno.h>
-#include <sys/ioctl.h>
+#include <unistd.h>
 #include <linux/input.h>
 
 
@@ -39,39 +33,25 @@
  *
  * \param device C-string containing the path of the device to be opened *
  *
- * \return Returns the new file-descriptor on success. On error, -1 is returned
- *  and an error message will be send to syslog.
+ * \return Returns the new file-descriptor on success. On any error, a negative
+ *  value inidicating the error will be returned.
  */
 int
-crutilsd_device_open (const char* device)
+crutilsd_device_open(const char *device)
 {
-	/* Try to open device. If this operation fails, return -1 and log an error-
-	 * message to syslog.
-	 */
+	/* Try to open the device file. */
 	int fd = open(device, O_RDONLY);
-	if (fd < 0) {
-		syslog(LOG_ERR, "[%s] unable to open device-file '%s': %s",
-			"lxinput", device, strerror(errno));
-
-		return -1;
-	}
+	if (fd < 0)
+		return ERR_OPEN;
 
 	/* Try to get exclusive rights for this device. Otherwise e.g. X11 might
 	 * get the same data as HID-input-event and print it as keyboard input.
 	 */
 	if (ioctl(fd, EVIOCGRAB, 1) < 0) {
-		syslog(LOG_ERR, "[%s] unable to grab device-file '%s' exclusive: %s",
-			"lxinput", device, strerror(errno));
-
-		// close device handler
-		if (close(fd) < 0) {
-			syslog(LOG_ERR, "[%s] unable to close device-file '%s': %s",
-				"lxinput", device, strerror(errno));
-		}
-
-		return -1;
+		/* Grab failed. Close device file descriptor and return an error. */
+		close(fd);
+		return ERR_GRAB;
 	}
-
 
 	// return file-descriptor
 	return fd;

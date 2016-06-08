@@ -39,7 +39,7 @@ if (BUILD_DOCUMENTATION)
 	add_custom_command (OUTPUT ${doxy_html_index_file}
 		COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
 		MAIN_DEPENDENCY ${doxyfile} ${doxyfile_in}
-		DEPENDS crutilsd driver_linux crutils
+		DEPENDS crutilsd driver_lxinput crutils
 		COMMENT "Generating documentation"
 	)
 	add_custom_target(doc ALL DEPENDS ${doxy_html_index_file})

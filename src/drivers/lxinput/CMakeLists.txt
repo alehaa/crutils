@@ -25,6 +25,7 @@ add_library(driver_lxinput SHARED
 	close.c
 	keytoc.c
 	read.c
+	strerror.c
 )
 
 

@@ -18,15 +18,9 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-
-/* include header-files
- */
 #include "lxinput.h"
 
 #include <unistd.h>
-#include <syslog.h>
-#include <string.h>
-#include <errno.h>
 #include <linux/input.h>
 
 
@@ -39,13 +33,13 @@
  *
  * \param device_fd file-descriptor for opened device-file
  * \param buffer pointer to an array of char where code should be stored
- * \param num maximum bytes to be read
+ * \param length maximum bytes to be read
  *
- * \return On success, the number of bytes read is returned.  On error, -1 is
- *  returned and an error message will be send to syslog.
+ * \return On success, the number of bytes read is returned. On any error, a
+ *  negative value inidicating the error will be returned.
  */
 ssize_t
-crutilsd_device_read (int device_fd, char *buffer, size_t length)
+crutilsd_device_read(int device_fd, char *buffer, size_t length)
 {
 	struct input_event ev;
 	size_t input_event_size = sizeof(ev);
@@ -55,12 +49,8 @@ crutilsd_device_read (int device_fd, char *buffer, size_t length)
 
 	while (num < length) {
 		// read one input event
-		if (read(device_fd, &ev, input_event_size) < input_event_size) {
-			syslog(LOG_ERR, "[%s] unable to read code from device-file '%d': %s",
-				"lxinput", device_fd, strerror(errno));
-
-			return -1;
-		}
+		if (read(device_fd, &ev, input_event_size) < input_event_size)
+			return ERR_READ;
 
 
 		// ignore any event other than EV_KEY
