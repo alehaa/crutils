@@ -18,29 +18,11 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-/* This header file is for internal functions, which should not be used public.
- * Functions defined in this header are non-stable and may change in future
- * releases! */
-
-#ifndef CODEREADER_STREAM_H
-#define CODEREADER_STREAM_H
+#ifndef CODEREADER_CMAKE_CONFIG_H
+#define CODEREADER_CMAKE_CONFIG_H
 
 
-#include <stdio.h> // ssize_t, size_t
-
-#include "driver.h"
-
-
-typedef struct codereader_cookie
-{
-	int fd; ///< Device filedescriptor.
-
-	codereader_driver driver; ///< Driver used for device.
-} codereader_cookie;
-
-
-ssize_t codereader_read(void *cookie, char *buf, size_t size);
-int codereader_close(void *cookie);
+#define CODEREADER_DRIVER_DIR "@CODEREADER_DRIVER_DIR@"
 
 
 #endif

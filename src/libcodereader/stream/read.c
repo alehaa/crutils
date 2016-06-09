@@ -20,7 +20,7 @@
 
 #include "stream.h"
 
-#include <string.h>
+#include <unistd.h> // read
 
 #include "codereader-internal.h" // CODEREADER_INTERNAL
 
@@ -28,7 +28,7 @@
 /** \brief Read data from codereader device.
  *
  *
- * \param cookie Unused.
+ * \param cookie \ref crutils_cookie current status storage struct.
  * \param buf Destination buffer.
  * \param size Size of \p buf.
  *
@@ -39,6 +39,12 @@ CODEREADER_INTERNAL
 ssize_t
 codereader_read(void *cookie, char *buf, size_t size)
 {
-	strncpy(buf, "Hello\0", size);
-	return 7;
+	codereader_cookie *c = (codereader_cookie *)cookie;
+
+	/* Read data from the device file with the provided driver hook. If no hook
+	 * is provided by the driver, we'll use the system's read syscall. */
+	if (c->driver.read != NULL)
+		return c->driver.read(c->fd, buf, size);
+	else
+		return read(c->fd, buf, size);
 }

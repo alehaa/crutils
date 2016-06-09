@@ -26,6 +26,26 @@ find_package(Sanitizers)   # Find sanitizers
 find_package(C99 REQUIRED) # C99 support.
 
 
+# Set some paths for crutils. We will use the paths defined by GNUInstallDirs.
+# If the path is not absolute, we will preprend the install prefix. This ensures
+# most compatibility with dpkg and non-dpkg installations.
+macro(set_path_var NAME PATH)
+	set(${NAME} ${PATH})
+	if (NOT IS_ABSOLUTE ${NAME})
+		set(${NAME} "${CMAKE_INSTALL_PREFIX}/${${NAME}}")
+	endif ()
+endmacro()
+
+set_path_var(CODEREADER_DRIVER_DIR "${CMAKE_INSTALL_LIBDIR}/codereader")
+
+
+# Generate a C header file, containing all generated variables. The current
+# binary will be included, to make the header available for all subdirectories.
+configure_file(cmake-config.h.in cmake-config.h)
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+
 # Enable C99 for all targets. We are using mixed C++ style comments for doxygen
 # and mixed declarations and code, so we need C99 to satisfy the compiler in
 # pedantic mode (enabled by CChelper above)

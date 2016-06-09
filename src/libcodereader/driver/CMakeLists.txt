@@ -18,23 +18,8 @@
 #   2013-2016 Alexander Haase <ahaase@alexhaase.de>
 #
 
-# Include all subdirectories to make header files available to all other object
-# libraries.
-include_directories(. driver stream)
+add_library(codereader-driver OBJECT load.c unload.c)
+add_sanitizers(codereader-driver)
+add_coverage(codereader-driver)
 
-
-# Recurse into subdirectories.
-add_subdirectory(driver)
-add_subdirectory(stream)
-
-
-add_library(codereader SHARED
-	$<TARGET_OBJECTS:codereader-driver>
-	$<TARGET_OBJECTS:codereader-stream>
-	empty.c
-)
-add_sanitizers(codereader)
-add_coverage(codereader)
-
-install(TARGETS codereader LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-install(FILES codereader.h DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+target_link_libraries(codereader-driver dl)

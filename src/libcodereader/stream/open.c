@@ -23,8 +23,11 @@
 
 #include "codereader.h"
 
-#include <stdio.h> // IO functions and types
+#include <stdio.h>  // IO functions and types
+#include <stdlib.h> // malloc
+#include <fcntl.h>  // open
 
+#include "driver.h"
 #include "stream.h"
 
 
@@ -50,8 +53,39 @@ codereader_open()
 	hooks.close = codereader_close;
 
 
+	/* Alllocate memory for a new cookie. The cookie will be used to save the
+	 * current FILE state across multiple function calls, until it is freed by
+	 * crutils_close. If malloc fails, we can return immediately, because no
+	 * dynamic memoty has to be freed. */
+	codereader_cookie *cookie = malloc(sizeof(codereader_cookie));
+	if (cookie == NULL)
+		return NULL;
+
+
+	const char device[] = "/dev/null";
+	const char driver[] = "none";
+
+	/* Load the required driver for the codereader. */
+	if (!codereader_driver_load(driver, &(cookie->driver)))
+		goto free_cookie;
+
+
+	/* Open the device file with the provided driver hook. If no hook is
+	 * provided by the driver, we'll use the system's open syscall. */
+	if (cookie->driver.open != NULL) {
+		if ((cookie->fd = cookie->driver.open(device)) < 0)
+			goto free_cookie;
+	} else
+		cookie->fd = open(device, O_RDONLY);
+
+
 	/* Setup the new codereader stream. On success fopencookie() returns a
 	 * pointer to the new stream. On error, NULL is returned, so we don't have
 	 * to evaluate the result. */
-	return fopencookie(NULL, "r", hooks);
+	return fopencookie(cookie, "r", hooks);
+
+
+free_cookie:
+	free(cookie);
+	return NULL;
 }

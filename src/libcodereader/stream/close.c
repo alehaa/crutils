@@ -21,8 +21,10 @@
 #include "stream.h"
 
 #include <stdlib.h> // free
+#include <unistd.h> // close
 
 #include "codereader-internal.h" // CODEREADER_INTERNAL
+#include "driver.h"
 
 
 /** \brief Close the codereader stream.
@@ -40,7 +42,22 @@ CODEREADER_INTERNAL
 int
 codereader_close(void *cookie)
 {
+	codereader_cookie *c = (codereader_cookie *)cookie;
+
+	/* Close the device file with the provided driver hook. If no hook is
+	 * provided by the driver, we'll use the system's close syscall. */
+	int ret;
+	if (c->driver.close != NULL)
+		ret = c->driver.close(c->fd);
+	else
+		ret = close(c->fd);
+
+
+	/* Unload the device driver. */
+	codereader_driver_unload(&(c->driver));
+
+
 	free(cookie);
 
-	return 0;
+	return ret;
 }
