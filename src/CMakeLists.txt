@@ -37,6 +37,8 @@ macro(set_path_var NAME PATH)
 endmacro()
 
 set_path_var(CODEREADER_DRIVER_DIR "${CMAKE_INSTALL_LIBDIR}/codereader")
+set_path_var(CODEREADER_CONFIG_FILE
+             "${CMAKE_INSTALL_SYSCONFDIR}/codereader.conf")
 
 
 # Generate a C header file, containing all generated variables. The current

@@ -27,6 +27,7 @@
 #include <stdlib.h> // malloc
 #include <fcntl.h>  // open
 
+#include "config.h"
 #include "driver.h"
 #include "stream.h"
 
@@ -53,17 +54,22 @@ codereader_open()
 	hooks.close = codereader_close;
 
 
+	/* Load the configuration file. If reading the configuration file fails, we
+	 * can return immediately, because no dynamic memory was allocated yet. */
+	char device[FILENAME_MAX];
+	char driver[CODEREADER_DRIVERNAME_MAX];
+	if (!codereader_read_config(device, driver))
+		return NULL;
+
+
 	/* Alllocate memory for a new cookie. The cookie will be used to save the
 	 * current FILE state across multiple function calls, until it is freed by
 	 * crutils_close. If malloc fails, we can return immediately, because no
-	 * dynamic memoty has to be freed. */
+	 * dynamic memoty needs to be freed. */
 	codereader_cookie *cookie = malloc(sizeof(codereader_cookie));
 	if (cookie == NULL)
 		return NULL;
 
-
-	const char device[] = "/dev/null";
-	const char driver[] = "none";
 
 	/* Load the required driver for the codereader. */
 	if (!codereader_driver_load(driver, &(cookie->driver)))

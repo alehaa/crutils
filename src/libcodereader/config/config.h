@@ -18,12 +18,19 @@
  *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
  */
 
-#ifndef CODEREADER_CMAKE_CONFIG_H
-#define CODEREADER_CMAKE_CONFIG_H
+#ifndef CODEREADER_CONFIG_H
+#define CODEREADER_CONFIG_H
 
 
-#define CODEREADER_DRIVER_DIR "@CODEREADER_DRIVER_DIR@"
-#define CODEREADER_CONFIG_FILE "@CODEREADER_CONFIG_FILE@"
+#include <stdbool.h> // bool
+
+
+/** \brief Maximum length of a driver name.
+ */
+#define CODEREADER_DRIVERNAME_MAX 32
+
+
+bool codereader_read_config(char *device, char *driver);
 
 
 #endif
