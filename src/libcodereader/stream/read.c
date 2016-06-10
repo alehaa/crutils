@@ -28,7 +28,7 @@
 /** \brief Read data from codereader device.
  *
  *
- * \param cookie \ref crutils_cookie current status storage struct.
+ * \param cookie \ref codereader_cookie current status storage struct.
  * \param buf Destination buffer.
  * \param size Size of \p buf.
  *

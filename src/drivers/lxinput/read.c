@@ -89,7 +89,7 @@ codereader_read(const int fd, char *buffer, size_t size)
 				num++;
 
 				// check, if this was the last character of read code
-				if (*buffer == '\0')
+				if (*buffer == '\n')
 					break;
 
 				// increment buffer position
