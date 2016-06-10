@@ -57,3 +57,4 @@ add_definitions(${C99_FLAGS})
 # Recurse into subdirectories.
 add_subdirectory(libcodereader)
 add_subdirectory(drivers)
+add_subdirectory(codereader-bin)
