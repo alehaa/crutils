@@ -42,14 +42,13 @@ ssize_t
 codereader_read(const int fd, char *buffer, size_t size)
 {
 	struct input_event ev;
-	size_t input_event_size = sizeof(ev);
 	int key_press_counter = 0;
 	size_t num = 0;
 
 
 	while (num < size) {
 		// read one input event
-		if (read(fd, &ev, input_event_size) < input_event_size)
+		if (read(fd, &ev, sizeof(ev)) < (ssize_t)sizeof(ev))
 			return ERR_READ;
 
 
