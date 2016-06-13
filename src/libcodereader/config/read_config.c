@@ -62,7 +62,7 @@ codereader_read_config(char *device, char *driver)
 	ssize_t read;
 	bool success = false;
 	while ((read = getline(&buffer, &buffer_size, fh)) != -1) {
-		if (sscanf(buffer, "%s %32s", device, driver) == 2) {
+		if (sscanf(buffer, "%s %31s", device, driver) == 2) {
 			success = true;
 			break;
 		}
