@@ -82,4 +82,4 @@ crutils is free software: you can redistribute it and/or modify it under the ter
 
 crutils is distributed in the hope that it will be useful, but **WITHOUT ANY WARRANTY**; without even the implied warranty of **MERCHANTABILITY** or **FITNESS FOR A PARTICULAR PURPOSE**. A Copy of the GPL can be found in the [LICENSE](LICENSE) file.
 
-Copyright (C) 2013-2016 Alexander Haase
+Copyright &copy; 2013-2017 Alexander Haase

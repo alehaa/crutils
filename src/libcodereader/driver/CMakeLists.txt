@@ -15,7 +15,7 @@
 #
 #
 # Copyright (C)
-#   2013-2016 Alexander Haase <ahaase@alexhaase.de>
+#   2013-2017 Alexander Haase <ahaase@alexhaase.de>
 #
 
 easy_add_library(codereader-driver OBJECT load.c unload.c)

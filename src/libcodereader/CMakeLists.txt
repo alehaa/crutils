@@ -15,7 +15,7 @@
 #
 #
 # Copyright (C)
-#   2013-2016 Alexander Haase <ahaase@alexhaase.de>
+#   2013-2017 Alexander Haase <ahaase@alexhaase.de>
 #
 
 # Include all subdirectories to make header files available to all other object

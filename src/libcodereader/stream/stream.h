@@ -15,7 +15,7 @@
  *
  *
  * Copyright (C)
- *  2013-2016 Alexander Haase <ahaase@alexhaase.de>
+ *  2013-2017 Alexander Haase <ahaase@alexhaase.de>
  */
 
 /* This header file is for internal functions, which should not be used public.
