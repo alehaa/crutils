@@ -18,6 +18,6 @@
 #   2013-2016 Alexander Haase <ahaase@alexhaase.de>
 #
 
-add_library(codereader-stream OBJECT open.c close.c read.c)
-add_sanitizers(codereader-stream)
-add_coverage(codereader-stream)
+easy_add_library(codereader-stream OBJECT open.c close.c read.c)
+add_sanitizers(codereader-stream codereader-stream_pic)
+add_coverage(codereader-stream codereader-stream_pic)

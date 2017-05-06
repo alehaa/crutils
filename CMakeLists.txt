@@ -27,6 +27,15 @@ cmake_minimum_required(VERSION 2.6)
 project("crutils" C CXX)
 
 
+# Set required policies
+#
+foreach (POL CMP0051)
+	if (POLICY ${POL})
+		cmake_policy(SET ${POL} NEW)
+	endif ()
+endforeach ()
+
+
 # CMake configuration.
 #
 set(CMAKE_MODULE_PATH

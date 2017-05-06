@@ -18,8 +18,8 @@
 #   2013-2016 Alexander Haase <ahaase@alexhaase.de>
 #
 
-add_library(codereader-driver OBJECT load.c unload.c)
-add_sanitizers(codereader-driver)
-add_coverage(codereader-driver)
+easy_add_library(codereader-driver OBJECT load.c unload.c)
+add_sanitizers(codereader-driver codereader-driver_pic)
+add_coverage(codereader-driver codereader-driver_pic)
 
-target_link_libraries(codereader-driver dl)
+easy_target_link_libraries(codereader-driver dl)

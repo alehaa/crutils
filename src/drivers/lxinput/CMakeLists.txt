@@ -30,6 +30,9 @@ add_library(driver-lxinput MODULE
 
 set_target_properties(driver-lxinput PROPERTIES OUTPUT_NAME "lxinput" PREFIX "")
 
+add_sanitizers(driver-lxinput)
+add_coverage(driver-lxinput)
+
 
 # install plugin
 install(TARGETS driver-lxinput DESTINATION ${CODEREADER_DRIVER_DIR})

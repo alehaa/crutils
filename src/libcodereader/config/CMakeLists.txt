@@ -18,6 +18,6 @@
 #   2013-2016 Alexander Haase <ahaase@alexhaase.de>
 #
 
-add_library(codereader-config OBJECT read_config.c)
-add_sanitizers(codereader-config)
-add_coverage(codereader-config)
+easy_add_library(codereader-config OBJECT read_config.c)
+add_sanitizers(codereader-config codereader-config_pic)
+add_coverage(codereader-config codereader-config_pic)

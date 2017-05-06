@@ -29,7 +29,7 @@ add_subdirectory(driver)
 add_subdirectory(stream)
 
 
-add_library(codereader SHARED
+easy_add_library(codereader SHARED
 	$<TARGET_OBJECTS:codereader-config>
 	$<TARGET_OBJECTS:codereader-driver>
 	$<TARGET_OBJECTS:codereader-stream>

@@ -21,6 +21,9 @@
 include_directories(../libcodereader)
 
 add_executable(codereader-bin codereader.c)
+add_sanitizers(codereader-bin)
+add_coverage(codereader-bin)
+
 target_link_libraries(codereader-bin codereader)
 
 set_target_properties(codereader-bin PROPERTIES OUTPUT_NAME "codereader")
