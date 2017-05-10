@@ -46,14 +46,6 @@
 FILE *
 codereader_open()
 {
-	/* Setup all hook functions. Thus the codereader stream is readonly and
-	 * unable to seek, write and seek functions don't have to be defined. The
-	 * read and close hooks will be mapped to internal codereader functions. */
-	cookie_io_functions_t hooks = {0};
-	hooks.read = codereader_read;
-	hooks.close = codereader_close;
-
-
 	/* Load the configuration file. If reading the configuration file fails, we
 	 * can return immediately, because no dynamic memory was allocated yet. */
 	char device[FILENAME_MAX];
@@ -84,6 +76,13 @@ codereader_open()
 	} else
 		cookie->fd = open(device, O_RDONLY);
 
+
+	/* Setup all hook functions. Thus the codereader stream is readonly and
+	 * unable to seek, write and seek functions don't have to be defined. The
+	 * read and close hooks will be mapped to internal codereader functions. */
+	cookie_io_functions_t hooks = {0};
+	hooks.read = codereader_read;
+	hooks.close = codereader_close;
 
 	/* Setup the new codereader stream. On success fopencookie() returns a
 	 * pointer to the new stream. On error, NULL is returned, so we don't have

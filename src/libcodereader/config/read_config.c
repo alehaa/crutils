@@ -24,7 +24,7 @@
 #include <stdio.h>  // fopen, fclose, getline
 #include <stdlib.h> // free
 
-#include "cmake-config.h"        // CRUTILS_CONFIG_FILE
+#include "cmake-config.h"        // CODEREADER_CONFIG_FILE
 #include "codereader-internal.h" // CODEREADER_INTERNAL
 
 

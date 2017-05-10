@@ -18,13 +18,12 @@
  *  2013-2017 Alexander Haase <ahaase@alexhaase.de>
  */
 
+/* This header file is for internal macros, which are dependend on the used
+ * compiler. Macros used in this header won't be public and may change from time
+ * to time, dependend on the needs of this project. */
 
-/* This header file is for internal functions, which should not be used public.
- * Functions defined in this header are non-stable and may change in future
- * releases! */
-
-#ifndef CODEREADER_INTERNAL_H
-#define CODEREADER_INTERNAL_H
+#ifndef CODEREADER_PRIVATE_ATTRIBUTES_H
+#define CODEREADER_PRIVATE_ATTRIBUTES_H
 
 
 /** \brief Mark function as internal.
@@ -32,7 +31,11 @@
  * \details This macro will be used to mark functions as internal functions,
  *  which will be hidden for global exports.
  */
+#ifdef __GNUC__
 #define CODEREADER_INTERNAL __attribute__((visibility("hidden")))
+#else
+#define CODEREADER_INTERNAL
+#endif
 
 
 #endif
