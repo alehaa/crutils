@@ -23,7 +23,7 @@
 #include <assert.h> // assert
 #include <dlfcn.h>  // dlclose
 
-#include "codereader-internal.h" // CODEREADER_INTERNAL
+#include "internal.h" // CODEREADER_INTERNAL
 
 
 /** \brief Unmap a \ref codereader_driver hook.

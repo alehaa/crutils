@@ -41,7 +41,8 @@ PROJECT_NAME = "@PROJECT_NAME@"
 # Note that you can specify absolute paths here, but also relative paths, which
 # will be relative from the directory where doxygen is started. This tag
 # requires that the tag FULL_PATH_NAMES is set to YES.
-STRIP_FROM_PATH = @CMAKE_SOURCE_DIR@
+STRIP_FROM_PATH = @PROJECT_SOURCE_DIR@ \
+                  @PROJECT_BINARY_DIR@
 
 # If the EXTRACT_ALL tag is set to YES, doxygen will assume all entities in
 # documentation are documented, even if no documentation was available. Private
@@ -68,7 +69,8 @@ QUIET = YES
 # directories like /usr/src/myproject. Separate the files or directories with
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
-INPUT = @PROJECT_SOURCE_DIR@/src
+INPUT = @PROJECT_SOURCE_DIR@/src \
+        @PROJECT_BINARY_DIR@/src/libcodereader
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.

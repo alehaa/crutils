@@ -27,7 +27,7 @@
 #include <stdlib.h> // malloc
 #include <fcntl.h>  // open
 
-#include "config.h"
+#include "conf.h"
 #include "driver.h"
 #include "stream.h"
 

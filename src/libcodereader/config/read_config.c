@@ -18,14 +18,14 @@
  *  2013-2017 Alexander Haase <ahaase@alexhaase.de>
  */
 
-#include "config.h"
+#include "conf.h"
 
 #include <assert.h> // assert
 #include <stdio.h>  // fopen, fclose, getline
 #include <stdlib.h> // free
 
-#include "cmake-config.h"        // CODEREADER_CONFIG_FILE
-#include "codereader-internal.h" // CODEREADER_INTERNAL
+#include "config.h"   // CODEREADER_CONFIG_FILE
+#include "internal.h" // CODEREADER_INTERNAL
 
 
 /** \brief Read codereader configuration file.

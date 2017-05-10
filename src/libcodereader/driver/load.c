@@ -24,8 +24,8 @@
 #include <dlfcn.h>  // dlopen, dlsym
 #include <stdio.h>  // snprintf, FILENAME_MAX
 
-#include "cmake-config.h"        // CODEREADER_DRIVER_DIR
-#include "codereader-internal.h" // CODEREADER_INTERNAL
+#include "config.h"   // CODEREADER_DRIVER_DIR
+#include "internal.h" // CODEREADER_INTERNAL
 
 
 /** \brief Map a \ref codereader_driver hook to a dynamic symbol.

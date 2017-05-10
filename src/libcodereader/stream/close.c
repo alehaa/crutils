@@ -23,8 +23,8 @@
 #include <stdlib.h> // free
 #include <unistd.h> // close
 
-#include "codereader-internal.h" // CODEREADER_INTERNAL
 #include "driver.h"
+#include "internal.h" // CODEREADER_INTERNAL
 
 
 /** \brief Close the codereader stream.

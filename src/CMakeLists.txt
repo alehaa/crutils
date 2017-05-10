@@ -41,13 +41,6 @@ set_path_var(CODEREADER_CONFIG_FILE
              "${CMAKE_INSTALL_SYSCONFDIR}/codereader.conf")
 
 
-# Generate a C header file, containing all generated variables. The current
-# binary will be included, to make the header available for all subdirectories.
-configure_file(cmake-config.h.in cmake-config.h)
-
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
-
 # Enable C99 for all targets. We are using mixed C++ style comments for doxygen
 # and mixed declarations and code, so we need C99 to satisfy the compiler in
 # pedantic mode (enabled by CChelper above)

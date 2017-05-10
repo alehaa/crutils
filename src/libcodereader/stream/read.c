@@ -22,7 +22,7 @@
 
 #include <unistd.h> // read
 
-#include "codereader-internal.h" // CODEREADER_INTERNAL
+#include "internal.h" // CODEREADER_INTERNAL
 
 
 /** \brief Read data from codereader device.
