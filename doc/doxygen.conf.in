@@ -44,6 +44,13 @@ PROJECT_NAME = "@PROJECT_NAME@"
 STRIP_FROM_PATH = @PROJECT_SOURCE_DIR@ \
                   @PROJECT_BINARY_DIR@
 
+# Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists of C sources
+# only. Doxygen will then generate output that is more tailored for C. For
+# instance, some of the names that are used will be different. The list of all
+# members will be omitted, etc.
+# The default value is: NO.
+OPTIMIZE_OUTPUT_FOR_C = YES
+
 # If the EXTRACT_ALL tag is set to YES, doxygen will assume all entities in
 # documentation are documented, even if no documentation was available. Private
 # class members and static file members will be hidden unless the
@@ -53,10 +60,21 @@ STRIP_FROM_PATH = @PROJECT_SOURCE_DIR@ \
 # The default value is: NO.
 EXTRACT_ALL = YES
 
+# If the EXTRACT_PRIVATE tag is set to YES, all private members of a class will
+# be included in the documentation.
+# The default value is: NO.
+EXTRACT_PRIVATE = @DOXYGEN_DOC_INTERNAL@
+
 # If the EXTRACT_STATIC tag is set to YES, all static members of a file will be
 # included in the documentation.
 # The default value is: NO.
-EXTRACT_STATIC = YES
+EXTRACT_STATIC = @DOXYGEN_DOC_INTERNAL@
+
+# The INTERNAL_DOCS tag determines if documentation that is typed after a
+# \internal command is included. If the tag is set to NO then the documentation
+# will be excluded. Set it to YES to include the internal documentation.
+# The default value is: NO.
+INTERNAL_DOCS = @DOXYGEN_DOC_INTERNAL@
 
 # The QUIET tag can be used to turn on/off the messages that are generated to
 # standard output by doxygen. If QUIET is set to YES this implies that the

@@ -22,7 +22,7 @@ matrix:
         - BUILD_DOC=1
       script:
         - mkdir travis && cd travis
-        - cmake .. -DCMAKE_INSTALL_PREFIX=../install -DBUILD_DOCUMENTATION=On && make doc
+        - cmake .. -DCMAKE_INSTALL_PREFIX=../install -DBUILD_DOC=On -DBUILD_DOC_INTERNAL=On && make doc
 
 addons:
   apt:

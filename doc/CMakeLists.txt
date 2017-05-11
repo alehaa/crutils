@@ -20,18 +20,24 @@
 
 # Doxygen documentation.
 #
-option(BUILD_DOCUMENTATION "Create HTML documentation" Off)
+option("BUILD_DOC" "Build HTML documentation." Off)
+option("BUILD_DOC_INTERNAL" "Include private documentation." Off)
 
 set(doxyfile_in "${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf.in")
 set(doxyfile "${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf")
 set(doxy_output_root "${CMAKE_CURRENT_BINARY_DIR}")
 set(doxy_html_index_file "${doxy_output_root}/html/index.html")
 
-if (BUILD_DOCUMENTATION)
+if (BUILD_DOC)
 	find_package(Doxygen REQUIRED)
 
 	if (NOT DOXYGEN_DOT_EXECUTABLE)
 		set(DOXYGEN_DOT_EXECUTABLE "")
+	endif ()
+
+	set(DOXYGEN_DOC_INTERNAL "NO")
+	if (BUILD_DOC_INTERNAL)
+		set(DOXYGEN_DOC_INTERNAL "YES")
 	endif ()
 
 	configure_file(${doxyfile_in} ${doxyfile} @ONLY)
@@ -39,7 +45,7 @@ if (BUILD_DOCUMENTATION)
 	add_custom_command (OUTPUT ${doxy_html_index_file}
 		COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
 		MAIN_DEPENDENCY ${doxyfile} ${doxyfile_in}
-		DEPENDS codereader driver-lxinput
+		DEPENDS codereader codereader-bin
 		COMMENT "Generating documentation"
 	)
 	add_custom_target(doc ALL DEPENDS ${doxy_html_index_file})
@@ -47,4 +53,4 @@ if (BUILD_DOCUMENTATION)
 
 	# install documentation
 	install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION share/doc)
-endif (BUILD_DOCUMENTATION)
+endif ()
