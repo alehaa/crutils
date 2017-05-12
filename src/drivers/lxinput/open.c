@@ -31,15 +31,19 @@
  *  filedescriptor on success.
  *
  *
- * \param path C-string containing the path of the device to be opened *
+ * \param config Pointer to device configuration.
+ * \param cookie Pointer to device data storage (unused).
  *
  * \return Returns the new file-descriptor on success. On any error, a negative
  *  value inidicating the error will be returned.
  */
 int
-codereader_open(const char *path)
+codereader_open(const config_setting_t *config, void **cookie)
 {
 	/* Try to open the device file. */
+	const char *path;
+	if (config_setting_lookup_string(config, "device", &path) != CONFIG_TRUE)
+		return ERR_OPEN;
 	int fd = open(path, O_RDONLY);
 	if (fd < 0)
 		return ERR_OPEN;

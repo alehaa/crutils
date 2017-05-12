@@ -30,12 +30,13 @@
  *
  *
  * \param fd File-descriptor to be closed.
+ * \param cookie Data cookie (unused).
  *
  * \return Returns zero on success. On any error, a negative value inidicating
  *  the error will be returned.
  */
 int
-codereader_close(const int fd)
+codereader_close(int fd, void *cookie)
 {
 	/* Try to ungrab device, so that other processes (e.g. by X11) may receive
 	 * events by this device. */

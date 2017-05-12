@@ -34,12 +34,13 @@
  * \param fd file-descriptor for opened device-file
  * \param buffer pointer to an array of char where code should be stored
  * \param size maximum bytes to be read
+ * \param cookie Data cookie (unused)
  *
  * \return On success, the number of bytes read is returned. On any error, a
  *  negative value inidicating the error will be returned.
  */
-ssize_t
-codereader_read(const int fd, char *buffer, size_t size)
+int
+codereader_read(int fd, char *buffer, int size, void *cookie)
 {
 	struct input_event ev;
 	int key_press_counter = 0;

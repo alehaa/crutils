@@ -21,6 +21,8 @@
 #include <linux/input.h>
 #include <limits.h>
 
+#include <libconfig.h> // libconfig API
+
 
 typedef enum errorcodes {
 	ERR_OPEN = INT_MIN,
@@ -33,8 +35,8 @@ typedef enum errorcodes {
 
 const char *codereader_strerror(const int errno);
 
-int codereader_open(const char *path);
-int codereader_close(const int fd);
-ssize_t codereader_read(const int fd, char *buffer, size_t size);
+int codereader_open(const config_setting_t *config, void **cookie);
+int codereader_read(int fd, char *buffer, int size, void *cookie);
+int codereader_close(int fd, void *cookie);
 
 const char keytoc(struct input_event *p_ev);

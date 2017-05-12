@@ -26,6 +26,12 @@
 #define CODEREADER_PRIVATE_ATTRIBUTES_H
 
 
+#include "config.h" // HAVE_FOPENCOOKIE
+#ifdef HAVE_FOPENCOOKIE
+#include <stdio.h>
+#endif
+
+
 /** \brief Mark function as internal.
  *
  * \details This macro will be used to mark functions as internal functions,
@@ -36,6 +42,30 @@
 #else
 #define CODEREADER_INTERNAL
 #endif
+
+
+/** \brief Message prefix.
+ *
+ * \details This prefix should be used for any output e.g. for error messages,
+ *  so the user can identify the origin of this message.
+ */
+#define CODEREADER_MESSAGE_PREFIX "[codereader] "
+
+
+/* The definitions of codereader_read depends on the used function to create the
+ * stream, as they use different signatures for the internal functions. */
+#ifdef HAVE_FOPENCOOKIE
+#define CODEREADER_READ_RETURN_TYPE ssize_t
+#define CODEREADER_READ_SIZE_TYPE size_t
+#else
+#define CODEREADER_READ_RETURN_TYPE int
+#define CODEREADER_READ_SIZE_TYPE int
+#endif
+
+
+CODEREADER_READ_RETURN_TYPE codereader_read(void *cookie, char *buf,
+                                            CODEREADER_READ_SIZE_TYPE size);
+int codereader_close(void *cookie);
 
 
 #endif

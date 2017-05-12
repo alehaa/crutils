@@ -39,6 +39,7 @@ endforeach ()
 # CMake configuration.
 #
 set(CMAKE_MODULE_PATH
+	"${CMAKE_SOURCE_DIR}/cmake"
 	"${CMAKE_SOURCE_DIR}/externals/CMake-sanitizers/cmake"
 	"${CMAKE_SOURCE_DIR}/externals/CMake-codecov/cmake"
 	"${CMAKE_SOURCE_DIR}/externals/CMake-CChelper/cmake"

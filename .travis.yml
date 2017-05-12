@@ -31,7 +31,7 @@ addons:
     packages:
       - cmake
       - doxygen
-      - libdbus-glib-1-dev
+      - libconfig-dev
 
 cache: ccache
 
