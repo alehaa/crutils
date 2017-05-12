@@ -22,9 +22,9 @@ include(CChelper)       # Enable compiler warnings.
 include(GNUInstallDirs) # Install paths.
 include(easylib)        # Activate easylib interface.
 
-find_package(Sanitizers)         # Find sanitizers
-find_package(C99 REQUIRED)       # C99 support.
-find_package(Libconfig REQUIRED) # libconfig used by libcodereader and drivers.
+find_package(Sanitizers)   # Find sanitizers
+find_package(C99 REQUIRED) # C99 support.
+find_package(Libconfig 1.4 REQUIRED) # libconfig used by library and drivers.
 
 
 # Set some paths for crutils. We will use the paths defined by GNUInstallDirs.
