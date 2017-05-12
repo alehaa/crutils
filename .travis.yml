@@ -1,41 +1,65 @@
+# This file is part of crutils.
+#
+# crutils is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# crutils is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Lesser General Public License along
+# with crutils. If not, see <http://www.gnu.org/licenses/>.
+#
+#
+# Copyright (C)
+#   2013-2017 Alexander Haase <ahaase@alexhaase.de>
+#
+
 language: c
-compiler:
-  - gcc
-  - clang
+
 
 matrix:
   include:
+    # Ubuntu Trusty builds.
     - os: linux
       dist: trusty
-      sudo: required
+      sudo: false
       compiler: gcc
     - os: linux
       dist: trusty
-      sudo: required
+      sudo: false
       compiler: clang
 
-    - os: linux
-      dist: trusty
-      sudo: required
-      compiler: gcc
-      env:
-        - BUILD_DOC=1
-      script:
-        - mkdir travis && cd travis
-        - cmake .. -DCMAKE_INSTALL_PREFIX=../install -DBUILD_DOC=On -DBUILD_DOC_INTERNAL=On && make doc
+    # macOS builds.
+    - os: osx
+      compiler: clang
+      # Install all required packages for OS X builds. The following solution
+      # was inspired by http://stackoverflow.com/a/20802381
+      before_install:
+        - brew update --quiet >& /dev/null
+        - for pkg in cmake doxygen libconfig; do
+            if brew list -1 | grep -q "^${pkg}\$"; then
+              brew outdated $pkg || brew upgrade $pkg;
+            else
+              brew install $pkg;
+            fi
+          done
 
+
+# Install all dependencies for Linux.
 addons:
   apt:
-    sources:
-      - kalakris-cmake
     packages:
       - cmake
       - doxygen
       - libconfig-dev
 
-cache: ccache
-
 
 script:
-  - mkdir travis && cd travis
-  - cmake .. -DCMAKE_INSTALL_PREFIX=../install && make install
+  - mkdir build && cd build
+  - cmake .. -DCMAKE_INSTALL_PREFIX=../install
+             -DBUILD_DOC=On -DBUILD_DOC_INTERNAL=On
+    && make install
