@@ -18,10 +18,31 @@
 #   2013-2017 Alexander Haase <ahaase@alexhaase.de>
 #
 
-# Recurse into subdirectories.
+## \brief Add a new codereader driver.
 #
+# \note The target will be named `driver-${NAME}`.
+#
+#
+# \param NAME Name of the driver.
+# \param ... List of source files.
+#
+function (codereader_add_driver NAME)
+	# Add a new library target for the driver.
+	add_library(driver-${NAME} MODULE ${ARGN})
 
-# Linux-specific drivers
-if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-	add_subdirectory(lxinput)
-endif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+	# Set necessary properties for the library. The library should not have
+	# the `lib` prefix and is not named like its target name but simply ${NAME}.
+	set_target_properties(driver-${NAME} PROPERTIES
+		OUTPUT_NAME "${NAME}"
+		PREFIX "")
+
+	# Enable code coverage and sanitizing for the driver.
+	add_sanitizers(driver-${NAME})
+	add_coverage(driver-${NAME})
+
+	# Install the driver to the driver path.
+	install(TARGETS driver-${NAME} DESTINATION ${CODEREADER_DRIVER_DIR})
+endfunction ()
+
+
+add_subdirectory(lxinput)

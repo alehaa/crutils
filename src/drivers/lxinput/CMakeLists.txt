@@ -18,21 +18,9 @@
 #   2013-2017 Alexander Haase <ahaase@alexhaase.de>
 #
 
-
-# build plugin
-add_library(driver-lxinput MODULE
-	open.c
-	close.c
-	keytoc.c
-	read.c
-	strerror.c
-)
-
-set_target_properties(driver-lxinput PROPERTIES OUTPUT_NAME "lxinput" PREFIX "")
-
-add_sanitizers(driver-lxinput)
-add_coverage(driver-lxinput)
+if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+	return()
+endif ()
 
 
-# install plugin
-install(TARGETS driver-lxinput DESTINATION ${CODEREADER_DRIVER_DIR})
+codereader_add_driver(lxinput open.c read.c close.c keytoc.c strerror.c)
