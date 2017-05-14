@@ -168,9 +168,8 @@ codereader_open()
 	for (size_t i = 0; i < n; i++) {
 		config_setting_t *iter = config_setting_get_elem(root, i);
 
-		/* Allocate memory for the device struct. Default values won't be set,
-		 * as all values will be set by following functions, or won't be used if
-		 * the driver doesn't initialize them. */
+		/* Allocate memory for the device struct. Default values will be set, so
+		 * the close function can detect what is initialized yet on errors. */
 		struct codereader_device *device =
 		    malloc(sizeof(struct codereader_device));
 		if (device == NULL) {
@@ -179,6 +178,16 @@ codereader_open()
 			        __FILE__, __LINE__, config_setting_name(iter));
 			goto free_device_list;
 		}
+		device->cookie = NULL;
+		device->driver.dh = NULL;
+		device->driver.open = NULL;
+		device->driver.read = NULL;
+		device->driver.close = NULL;
+
+		/* Append device to the list of all loaded devices. This will be done
+		 * first after allocating the memory, so the 'free_device_list' label
+		 * will free the memory for this device, too. */
+		SLIST_INSERT_HEAD(&head, device, lmp);
 
 		/* Get the driver used by this device and load it. If no driver is
 		 * specified, or the driver can't be loaded, an error message will be
@@ -211,9 +220,6 @@ codereader_open()
 			        config_setting_name(iter));
 			goto free_device_list;
 		}
-
-		/* Append device to the list of all loaded devices. */
-		SLIST_INSERT_HEAD(&head, device, lmp);
 	}
 
 	/* Free the space allocated for the configuration. */

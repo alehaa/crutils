@@ -51,14 +51,19 @@ codereader_close(void *cookie)
 	 * drivers. After the device has been closed, the loaded driver's shared
 	 * object will be unloaded and the allocated memory freed. If an error
 	 * happens while closing or unloading, the other drivers still will be
-	 * closed, but an error will be returned at the end of the function. */
+	 * closed, but an error will be returned at the end of the function.
+	 *
+	 * Note: The device has to be checked if it's fully initialized, as this
+	 *       function may be called in error situations, too. */
 	int ret = 0;
 	struct codereader_device *iter;
 	while (!SLIST_EMPTY(&devices)) {
 		iter = SLIST_FIRST(&devices);
-		if (iter->driver.close(iter->fd, iter->cookie) != 0)
+		if ((iter->driver.close != NULL) &&
+		    (iter->driver.close(iter->fd, iter->cookie) != 0))
 			ret = -1;
-		dlclose(iter->driver.dh);
+		if (iter->driver.dh != NULL)
+			dlclose(iter->driver.dh);
 
 		SLIST_REMOVE_HEAD(&devices, lmp);
 		free(iter);
