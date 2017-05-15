@@ -36,14 +36,14 @@ endif ()
 # CMake configuration. The destination dir will be added to the include-path, so
 # compiled files will find this file.
 configure_file(config.h.in config.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${LIBCONFIG_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
 
 
 easy_add_library(codereader SHARED open.c read.c close.c)
 add_sanitizers(codereader)
 add_coverage(codereader)
 
-target_link_libraries(codereader dl ${LIBCONFIG_LIBRARY})
+target_link_libraries(codereader dl ${LIBCONFIG_LIBRARIES})
 
 install(TARGETS codereader LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 install(FILES codereader.h DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")

@@ -23,4 +23,6 @@ if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 endif ()
 
 
+include_directories(${LIBCONFIG_INCLUDE_DIRS})
+
 codereader_add_driver(lxinput open.c read.c close.c keytoc.c strerror.c)
