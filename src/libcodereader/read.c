@@ -58,12 +58,13 @@ codereader_read(void *cookie, char *buf, CODEREADER_READ_SIZE_TYPE size)
 	 * below. */
 	fd_set fds;
 	FD_ZERO(&fds);
-	size_t fds_count = 0;
+	int fd_max = 0;
 	struct codereader_device *iter;
 	SLIST_FOREACH(iter, &devices, lmp)
 	{
 		FD_SET(iter->fd, &fds);
-		fds_count++;
+		if (iter->fd > fd_max)
+			fd_max = iter->fd;
 	}
 
 	/* Do a select on all device file descriptors, to wait for available data on
@@ -71,7 +72,7 @@ codereader_read(void *cookie, char *buf, CODEREADER_READ_SIZE_TYPE size)
 	 * be processed, even if more than one is ready for reading, as this
 	 * function should only return one barcode at a time. The next barcode will
 	 * be fetched by the next call to this function. */
-	if (select(fds_count, &fds, NULL, NULL, NULL) < 0) {
+	if (select(fd_max + 1, &fds, NULL, NULL, NULL) < 0) {
 		fprintf(stderr, CODEREADER_MESSAGE_PREFIX
 		        "Failed to select a device file descriptor.\n");
 		return -1;
