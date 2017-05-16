@@ -63,6 +63,7 @@ Currently the following drivers are supported:
 |name|description|
 |-------|------------|
 |lxinput|Parse Linux kernel event files.|
+|xinput2|Parse X11 input events.|
 
 
 ## Contribute

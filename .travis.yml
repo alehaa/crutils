@@ -56,6 +56,8 @@ addons:
       - cmake
       - doxygen
       - libconfig-dev
+      - libx11-dev
+      - libxi-dev
 
 
 script:

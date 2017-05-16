@@ -67,6 +67,7 @@ codereader_read(void *cookie, char *buf, CODEREADER_READ_SIZE_TYPE size)
 			fd_max = iter->fd;
 	}
 
+listen_devices:
 	/* Do a select on all device file descriptors, to wait for available data on
 	 * any of them. There will be no time-limit. Only one file descriptor will
 	 * be processed, even if more than one is ready for reading, as this
@@ -82,8 +83,12 @@ codereader_read(void *cookie, char *buf, CODEREADER_READ_SIZE_TYPE size)
 	 * will be used and data be returned to the user. */
 	SLIST_FOREACH(iter, &devices, lmp)
 	{
-		if (FD_ISSET(iter->fd, &fds))
-			return iter->driver.read(iter->fd, buf, size, iter->cookie);
+		if (FD_ISSET(iter->fd, &fds)) {
+			int ret = iter->driver.read(iter->fd, buf, size, iter->cookie);
+			if (ret == 0)
+				goto listen_devices;
+			return ret;
+		}
 	}
 
 	/* If the function reached this point, a fatal error occured, as select

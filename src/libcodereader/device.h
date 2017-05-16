@@ -49,7 +49,7 @@ typedef int (*codereader_hook_open)(const config_setting_t *config,
  * \param fd The previously opened file-descriptor.
  * \param buffer Where to store read data.
  * \param size Size of \p buffer.
- * \param Pointer to the driver's data storage.
+ * \param cookie Pointer to the driver's data storage.
  *
  * \return On success the number of read bytes should be returned, otherwise -1.
  */
@@ -60,7 +60,7 @@ typedef int (*codereader_hook_read)(int fd, char *buffer, int size,
  *
  *
  * \param fd The previously opened file-descriptor.
- * \param Pointer to the driver's data storage.
+ * \param cookie Pointer to the driver's data storage.
  *
  * \return On success zero should be returned, otherwise -1.
  */

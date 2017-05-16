@@ -46,3 +46,4 @@ endfunction ()
 
 
 add_subdirectory(lxinput)
+add_subdirectory(xinput2)
