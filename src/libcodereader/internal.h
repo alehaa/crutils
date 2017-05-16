@@ -63,6 +63,19 @@
 #endif
 
 
+/** \brief Set this token, if AddressSanitizer is activated.
+ */
+#if __SANITIZE_ADDRESS__
+#define CODEREADER_SANITIZE_ADDRESS
+#else
+#if defined(__has_feature)
+#if __has_feature(address_sanitizer)
+#define CODEREADER_SANITIZE_ADDRESS
+#endif
+#endif
+#endif
+
+
 CODEREADER_READ_RETURN_TYPE codereader_read(void *cookie, char *buf,
                                             CODEREADER_READ_SIZE_TYPE size);
 int codereader_close(void *cookie);

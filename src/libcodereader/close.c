@@ -22,7 +22,7 @@
 #include <stdlib.h> // free
 
 #include "device.h"   // codereader_device*
-#include "internal.h" // CODEREADER_INTERNAL
+#include "internal.h" // CODEREADER_INTERNAL, CODEREADER_SANITIZE_ADDRESS
 
 
 /** \brief Close the codereader stream.
@@ -62,8 +62,13 @@ codereader_close(void *cookie)
 		if ((iter->driver.close != NULL) &&
 		    (iter->driver.close(iter->fd, iter->cookie) != 0))
 			ret = -1;
+#ifndef CODEREADER_SANITIZE_ADDRESS
+		/* If AddressSanitizer is activated, don't close the handle, so
+		 * LeakSanitizer and valgrind don't get confused about missing symbols.
+		 * Otherwise they would detect many memory leaks. */
 		if (iter->driver.dh != NULL)
 			dlclose(iter->driver.dh);
+#endif
 
 		SLIST_REMOVE_HEAD(&devices, lmp);
 		free(iter);
