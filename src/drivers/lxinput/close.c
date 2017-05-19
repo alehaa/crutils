@@ -36,7 +36,7 @@
  *  the error will be returned.
  */
 int
-codereader_close(int fd, void *cookie)
+device_close(int fd, void *cookie)
 {
 	/* Try to ungrab device, so that other processes (e.g. by X11) may receive
 	 * events by this device. */

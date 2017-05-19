@@ -38,7 +38,7 @@
  *  value inidicating the error will be returned.
  */
 int
-codereader_open(const config_setting_t *config, void **cookie)
+device_open(const config_setting_t *config, void **cookie)
 {
 	/* Try to open the device file. */
 	const char *path;

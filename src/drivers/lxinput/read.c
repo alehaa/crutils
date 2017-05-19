@@ -40,7 +40,7 @@
  *  negative value inidicating the error will be returned.
  */
 int
-codereader_read(int fd, char *buffer, int size, void *cookie)
+device_read(int fd, char *buffer, int size, void *cookie)
 {
 	struct input_event ev;
 	int key_press_counter = 0;

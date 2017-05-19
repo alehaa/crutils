@@ -111,11 +111,11 @@ codereader_driver_load(const char *name, struct codereader_driver *driver)
 	 * error while loading, codereader_dlsym will print a warning and this
 	 * function will return false after processing all symbols. */
 	driver->open =
-	    (codereader_hook_open)codereader_dlsym(driver->dh, "codereader_open");
+	    (codereader_hook_open)codereader_dlsym(driver->dh, "device_open");
 	driver->read =
-	    (codereader_hook_read)codereader_dlsym(driver->dh, "codereader_read");
+	    (codereader_hook_read)codereader_dlsym(driver->dh, "device_read");
 	driver->close =
-	    (codereader_hook_close)codereader_dlsym(driver->dh, "codereader_close");
+	    (codereader_hook_close)codereader_dlsym(driver->dh, "device_close");
 
 	return (driver->open != NULL && driver->read != NULL &&
 	        driver->close != NULL);

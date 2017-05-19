@@ -239,8 +239,8 @@ free_devices:
  *  be returned, otherwise -1.
  */
 int
-codereader_open(const config_setting_t *config,
-                struct codereader_xinput2_cookie **cookie)
+device_open(const config_setting_t *config,
+            struct codereader_xinput2_cookie **cookie)
 {
 	/* Allocate memory for the internal cookie. We'll register the memory in the
 	 * cookie pointer first, so errors don't have to be specially handled in
@@ -311,8 +311,8 @@ codereader_open(const config_setting_t *config,
  *  was ignored zero and on errors -1.
  */
 int
-codereader_read(int fd, char *buffer, int size,
-                struct codereader_xinput2_cookie *cookie)
+device_read(int fd, char *buffer, int size,
+            struct codereader_xinput2_cookie *cookie)
 {
 	assert(cookie);
 
@@ -414,7 +414,7 @@ codereader_read(int fd, char *buffer, int size,
  * \return On success zero will be returned, otherwise -1.
  */
 int
-codereader_close(int fd, struct codereader_xinput2_cookie *cookie)
+device_close(int fd, struct codereader_xinput2_cookie *cookie)
 {
 	/* If no storage for cookie has been reserved yet, nothing has to be freed
 	 * and this function has nothing to do. */
