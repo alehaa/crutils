@@ -331,8 +331,14 @@ codereader_read(int fd, char *buffer, int size,
 		 * be ignored. */
 		if (!XGetEventData(cookie->display, event) ||
 		    event->type != GenericEvent ||
-		    event->extension != cookie->xi_opcode)
-			return 0;
+		    event->extension != cookie->xi_opcode) {
+			/* If recent events have been parsed yet and the code is not full
+			 * read, just skip this event but don't return. */
+			if (num_read > 0)
+				continue;
+			else
+				return 0;
+		}
 
 		switch (event->evtype) {
 			/* If the hierarchy changed, check the device list for new devices
@@ -340,7 +346,15 @@ codereader_read(int fd, char *buffer, int size,
 			 * tell libcodereader that this event was not a read code. */
 			case XI_HierarchyChanged:
 				XFreeEventData(cookie->display, event);
-				return grab_devices(cookie) ? 0 : -1;
+				if (grab_devices(cookie)) {
+					/* If recent events have been parsed yet and the code is not
+					 * full read, just skip this event but don't return. */
+					if (num_read > 0)
+						continue;
+					else
+						return 0;
+				} else
+					return -1;
 
 			/* If a key was pressed, parse the key event. If a key has been
 			 * composed, add this key to the buffer and process the next event,
