@@ -130,17 +130,24 @@ read_config(const config_setting_t *config,
 		        MESSAGE_PREFIX "Failed to allocate memory for match-array.\n");
 		return false;
 	}
-	memset(cookie->match_devices, 0, cookie->match_devices_num);
+	memset(cookie->match_devices, 0,
+	       sizeof(char *) * cookie->match_devices_num);
 
 	/* Duplicate the entries of the matches in the configuration and store the
 	 * copy in the internal data storage cookie, so it can be accessed at any
 	 * later time. */
-	for (int i = 0; i < cookie->match_devices_num; i++)
-		if ((cookie->match_devices[i] =
-		         strdup(config_setting_get_string_elem(matches, i))) == NULL) {
+	for (int i = 0; i < cookie->match_devices_num; i++) {
+		const char *p = config_setting_get_string_elem(matches, i);
+		if (p[0] == '\0') {
+			fprintf(stderr,
+			        MESSAGE_PREFIX "Match-entry %d must not be empty.\n", i);
+			return false;
+		}
+		if ((cookie->match_devices[i] = strdup(p)) == NULL) {
 			fprintf(stderr, MESSAGE_PREFIX "Failed to copy match-entry.\n");
 			return false;
 		}
+	}
 
 	return true;
 }
@@ -430,7 +437,8 @@ device_close(int fd, struct codereader_xinput2_cookie *cookie)
 	/* If the cookie contains a list of devices to match, free this list. */
 	if (cookie->match_devices != NULL) {
 		for (int i = 0; i < cookie->match_devices_num; i++)
-			free(cookie->match_devices[i]);
+			if (cookie->match_devices[i] != NULL)
+				free(cookie->match_devices[i]);
 		free(cookie->match_devices);
 	}
 
