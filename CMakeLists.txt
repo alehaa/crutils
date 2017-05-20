@@ -29,7 +29,7 @@ project("crutils" C CXX)
 
 # Set required policies
 #
-foreach (POL CMP0051)
+foreach (POL CMP0042 CMP0051)
 	if (POLICY ${POL})
 		cmake_policy(SET ${POL} NEW)
 	endif ()
