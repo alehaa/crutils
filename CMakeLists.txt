@@ -54,6 +54,7 @@ find_package(codecov)
 #
 add_subdirectory(src)
 add_subdirectory(doc)
+add_subdirectory(extra)
 
 
 # Evaluate coverage data.
