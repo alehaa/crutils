@@ -28,6 +28,7 @@
 #include <stdbool.h> // bool, false, true
 #include <stdio.h>   // IO functions, types and macros
 #include <stdlib.h>  // getenv, malloc
+#include <string.h>  // memset
 
 #include <libconfig.h> // libconfig API
 
@@ -178,11 +179,7 @@ codereader_open()
 			        __FILE__, __LINE__, config_setting_name(iter));
 			goto free_device_list;
 		}
-		device->cookie = NULL;
-		device->driver.dh = NULL;
-		device->driver.open = NULL;
-		device->driver.read = NULL;
-		device->driver.close = NULL;
+		memset(device, 0, sizeof(struct codereader_device));
 
 		/* Append device to the list of all loaded devices. This will be done
 		 * first after allocating the memory, so the 'free_device_list' label
