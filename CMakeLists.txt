@@ -39,12 +39,20 @@ endforeach ()
 # CMake configuration.
 #
 set(CMAKE_MODULE_PATH
-	"${CMAKE_SOURCE_DIR}/cmake"
-	"${CMAKE_SOURCE_DIR}/externals/CMake-sanitizers/cmake"
-	"${CMAKE_SOURCE_DIR}/externals/CMake-codecov/cmake"
-	"${CMAKE_SOURCE_DIR}/externals/CMake-CChelper/cmake"
-	"${CMAKE_SOURCE_DIR}/externals/CMake-easylib/cmake"
+	"${PROJECT_SOURCE_DIR}/cmake"
+	"${PROJECT_SOURCE_DIR}/externals/CMake-sanitizers/cmake"
+	"${PROJECT_SOURCE_DIR}/externals/CMake-codecov/cmake"
+	"${PROJECT_SOURCE_DIR}/externals/CMake-CChelper/cmake"
+	"${PROJECT_SOURCE_DIR}/externals/CMake-easylib/cmake"
+	"${PROJECT_SOURCE_DIR}/externals/CMake-gitinfo/cmake"
+	"${PROJECT_SOURCE_DIR}/externals/CMake-argp/cmake"
 	${CMAKE_MODULE_PATH})
+
+
+# Get the version info from git.
+find_package(GitInfo REQUIRED)
+git_version_info(CRUTILS)
+
 
 # Enable code coverage.
 find_package(codecov)

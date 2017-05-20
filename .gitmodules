@@ -10,3 +10,9 @@
 [submodule "externals/CMake-easylib"]
 	path = externals/CMake-easylib
 	url = https://github.com/alehaa/CMake-easylib.git
+[submodule "externals/CMake-argp"]
+	path = externals/CMake-argp
+	url = https://github.com/alehaa/CMake-argp.git
+[submodule "externals/CMake-gitinfo"]
+	path = externals/CMake-gitinfo
+	url = https://github.com/RWTH-HPC/CMake-gitinfo.git

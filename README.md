@@ -63,9 +63,9 @@ Cruilts comes with a binary called `codereader`. You can use it in shell scripts
 ~$ codereader | tee barcodes.txt
 12345
 ```
-You may add an optional argument with the number of barcodes to read:
+You may add an optional argument `-n` with the number of barcodes to read:
 ```
-~$ codereader 1
+~$ codereader -n 1
 12345
 ~$
 ```

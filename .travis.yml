@@ -40,7 +40,7 @@ matrix:
       # was inspired by http://stackoverflow.com/a/20802381
       before_install:
         - brew update --quiet >& /dev/null
-        - for pkg in cmake doxygen libconfig; do
+        - for pkg in cmake doxygen libconfig argp-standalone help2man; do
             if brew list -1 | grep -q "^${pkg}\$"; then
               brew outdated $pkg || brew upgrade $pkg;
             else
@@ -58,6 +58,7 @@ addons:
       - libconfig-dev
       - libx11-dev
       - libxi-dev
+      - help2man
 
 
 script:
