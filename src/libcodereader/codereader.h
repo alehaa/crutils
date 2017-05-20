@@ -25,7 +25,20 @@
 #include <stdio.h> // FILE
 
 
+/* The crutils API should be C++ compatible, too. We have to add the extern "C"
+ * stanza to avoid name mangeling. Otherwise C++ code would not find codereader
+ * API functions. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 FILE *codereader_open();
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif
