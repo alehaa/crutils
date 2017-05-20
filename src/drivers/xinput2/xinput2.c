@@ -107,7 +107,7 @@ read_config(const config_setting_t *config,
 	 * this driver. If the entry is not available in the configuration, an error
 	 * will be returned and an error message printed. */
 	config_setting_t *matches =
-	    config_setting_lookup((config_setting_t *)config, "match");
+	    config_setting_get_member((config_setting_t *)config, "match");
 	if (matches == NULL) {
 		fprintf(stderr, MESSAGE_PREFIX "Missing config option 'match'.\n");
 		return false;
