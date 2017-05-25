@@ -24,7 +24,7 @@ cmake_minimum_required(VERSION 2.6)
 
 # Project information.
 #
-project("crutils" C CXX)
+project("crutils" C)
 
 
 # Set required policies
