@@ -20,8 +20,8 @@
 
 #include "lxinput.h"
 
-#include <unistd.h>
 #include <linux/input.h>
+#include <unistd.h>
 
 
 /** \brief Read single code from file-descriptor \p device_fd and stores it  in

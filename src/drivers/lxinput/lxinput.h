@@ -18,8 +18,8 @@
  *  2013-2017 Alexander Haase <ahaase@alexhaase.de>
  */
 
-#include <linux/input.h>
 #include <limits.h>
+#include <linux/input.h>
 
 #include <libconfig.h> // libconfig API
 

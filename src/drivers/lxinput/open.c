@@ -21,8 +21,8 @@
 #include "lxinput.h"
 
 #include <fcntl.h>
-#include <unistd.h>
 #include <linux/input.h>
+#include <unistd.h>
 
 
 /** \brief Open device-connection

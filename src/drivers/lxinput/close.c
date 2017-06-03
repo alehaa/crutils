@@ -20,8 +20,8 @@
 
 #include "lxinput.h"
 
-#include <unistd.h>
 #include <linux/input.h>
+#include <unistd.h>
 
 
 /** \brief Close device-connection
