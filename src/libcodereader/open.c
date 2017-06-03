@@ -112,13 +112,15 @@ codereader_driver_load(const char *name, struct codereader_driver *driver)
 
 	/* Symbolize the hook functions. If a function can't be found or there is an
 	 * error while loading, codereader_dlsym will print a warning and this
-	 * function will return false after processing all symbols. */
-	driver->open =
-	    (codereader_hook_open)codereader_dlsym(driver->dh, "device_open");
-	driver->read =
-	    (codereader_hook_read)codereader_dlsym(driver->dh, "device_read");
-	driver->close =
-	    (codereader_hook_close)codereader_dlsym(driver->dh, "device_close");
+	 * function will return false after processing all symbols.
+	 *
+	 * The following ugly casts have to be done for GCC, as it would report a
+	 * pedantic warning for casting void* to a function pointer (which is true,
+	 * but can be ignored when using dlsym). For further informations see
+	 * https://stackoverflow.com/a/19487645 */
+	*(void **)(&(driver->open)) = codereader_dlsym(driver->dh, "device_open");
+	*(void **)(&(driver->read)) = codereader_dlsym(driver->dh, "device_read");
+	*(void **)(&(driver->close)) = codereader_dlsym(driver->dh, "device_close");
 
 	return (driver->open != NULL && driver->read != NULL &&
 	        driver->close != NULL);
