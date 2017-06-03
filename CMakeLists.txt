@@ -46,6 +46,7 @@ set(CMAKE_MODULE_PATH
 	"${PROJECT_SOURCE_DIR}/externals/CMake-easylib/cmake"
 	"${PROJECT_SOURCE_DIR}/externals/CMake-gitinfo/cmake"
 	"${PROJECT_SOURCE_DIR}/externals/CMake-argp/cmake"
+	"${PROJECT_SOURCE_DIR}/externals/CMake-easytest/cmake"
 	${CMAKE_MODULE_PATH})
 
 
@@ -63,6 +64,15 @@ find_package(codecov)
 add_subdirectory(src)
 add_subdirectory(doc)
 add_subdirectory(extra)
+
+
+# Build tests and enable testing, if option is enabled.
+#
+option(ENABLE_TESTS "Selects whether tests are built." false)
+if (ENABLE_TESTS)
+	enable_testing()
+	add_subdirectory(tests)
+endif (ENABLE_TESTS)
 
 
 # Evaluate coverage data.

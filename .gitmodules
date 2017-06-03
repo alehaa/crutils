@@ -3,7 +3,7 @@
 	url = https://github.com/arsenm/sanitizers-cmake.git
 [submodule "externals/CMake-codecov"]
 	path = externals/CMake-codecov
-	url = https://github.com/RWTH-ELP/CMake-codecov.git
+	url = https://github.com/RWTH-HPC/CMake-codecov.git
 [submodule "externals/CMake-CChelper"]
 	path = externals/CMake-CChelper
 	url = https://github.com/alehaa/CMake-CChelper.git
@@ -16,3 +16,6 @@
 [submodule "externals/CMake-gitinfo"]
 	path = externals/CMake-gitinfo
 	url = https://github.com/RWTH-HPC/CMake-gitinfo.git
+[submodule "externals/CMake-easytest"]
+	path = externals/CMake-easytest
+	url = https://github.com/RWTH-HPC/CMake-easytest.git
