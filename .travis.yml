@@ -21,19 +21,77 @@
 language: c
 
 
-matrix:
-  include:
-    # Ubuntu Trusty builds.
-    - os: linux
-      dist: trusty
-      sudo: false
-      compiler: gcc
-    - os: linux
-      dist: trusty
-      sudo: false
-      compiler: clang
+# General settings for the Linux container builds.
+#
+# The used distro will be Trusty and sudo is not required. This enabled the
+# faster container builds.
+os: linux
+dist: trusty
+sudo: false
 
-    # macOS builds.
+
+# Install packages for Linux.
+#
+# As the container based builds do not support sudo, the Travis CI apt addon
+# will be used to install required dependencies.
+addons:
+  apt:
+    packages:
+      - cmake
+      - doxygen
+      - libconfig-dev
+      - libx11-dev
+      - libxi-dev
+      - help2man
+
+
+
+
+jobs:
+  include:
+    # The first stage will be a compiliance check to ensure all files follow the
+    # defined coding standard and include the required license header. All
+    # checks will be operating on a full clone of the repository and check all
+    # commits that are not merged to the master branch yet. This means in short:
+    # If only one of several commits doesn't follow the standards, these checks
+    # will fail, even if the code has been fixed in following commits.
+    - stage: compiliance
+      env:
+        FORMAT
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty
+          packages:
+            - clang-format-3.8
+      git:
+        submodules: false
+        depth: 9999999
+      before_script:
+        - git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+        - git fetch
+      script: extra/ci/check_format.sh
+
+    - env:
+        LICENSE_HEADER
+      addons:
+        apt:
+      git:
+        submodules: false
+        depth: 9999999
+      before_script:
+        - git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+        - git fetch
+      script: extra/license/check_license_header.sh
+
+    # The next stage will check, if the code can be compiled by different
+    # compilers and on different platforms. The build script is defined below
+    # used by all build jobs.
+    - stage: build
+      compiler: gcc
+
+    - compiler: clang
+
     - os: osx
       compiler: clang
       # Install all required packages for OS X builds. The following solution
@@ -49,18 +107,9 @@ matrix:
           done
 
 
-# Install all dependencies for Linux.
-addons:
-  apt:
-    packages:
-      - cmake
-      - doxygen
-      - libconfig-dev
-      - libx11-dev
-      - libxi-dev
-      - help2man
-
-
+# The following build script will be used by all build jobs / all jobs defining
+# no specialiced 'script'. It will build the whole source code with documen-
+# tation and installation.
 script:
   - mkdir build && cd build
   - cmake .. -DCMAKE_INSTALL_PREFIX=../install
