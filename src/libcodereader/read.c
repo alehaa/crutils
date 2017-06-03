@@ -22,7 +22,7 @@
 #include <sys/select.h> // select and FD_* macros
 
 #include "device.h"   // codereader_device*
-#include "internal.h" // CODEREADER_INTERNAL, CODEREADER_MESSAGE_PREFIX
+#include "internal.h" // internal macros and functions
 
 
 /** \brief Read data from codereader devices.

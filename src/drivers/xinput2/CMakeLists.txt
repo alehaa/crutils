@@ -18,7 +18,7 @@
 #   2013-2017 Alexander Haase <ahaase@alexhaase.de>
 #
 
-find_package(X11 COMPONENTS xi)
+find_package(X11 COMPONENTS xi) # X11 library
 
 
 # If X11 and the required components are not available, this driver can't be

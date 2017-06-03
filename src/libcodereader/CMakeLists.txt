@@ -18,7 +18,7 @@
 #   2013-2017 Alexander Haase <ahaase@alexhaase.de>
 #
 
-include(CheckFunctionExists)
+include(CheckFunctionExists) # check_function_exists function
 
 
 # Check for required functions for defining the FILE struct. Either fopencookie

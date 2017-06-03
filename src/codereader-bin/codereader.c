@@ -18,7 +18,7 @@
  *  2013-2017 Alexander Haase <ahaase@alexhaase.de>
  */
 
-#include <stdio.h>
+#include <stdio.h>  // fclose, fprintf, printf
 #include <stdlib.h> // atoi, EXIT_SUCCESS, EXIT_FAILURE
 
 #include <argp.h>       // argp functions

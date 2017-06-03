@@ -23,6 +23,8 @@
 #define _GNU_SOURCE
 
 
+#include "codereader.h" // codereader API declaration
+
 #include <assert.h>  // assert
 #include <dlfcn.h>   // dl* functions
 #include <stdbool.h> // bool, false, true
@@ -32,7 +34,7 @@
 
 #include <libconfig.h> // libconfig API
 
-#include "config.h"   // CODEREADER_CONFIG_FILE, CODEREADER_DRIVER_DIR
+#include "config.h"   // CMake configuration values
 #include "device.h"   // codereader_source* and codereader_hook*
 #include "internal.h" // CODEREADER_MESSAGE_PREFIX, codereader_* functions
 
